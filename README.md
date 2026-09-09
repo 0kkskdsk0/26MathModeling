@@ -2,7 +2,12 @@
 本项目用于我们团队合作求解26年国赛题目，并同时产出最终论文
 
 # Project Architecture
-.agents\skills 用于存放常用的AI skills，如让AI使用nbformat编辑notebook，让AI以notebook为工具分析数据  
+.agents\skills 用于存放常用的AI skills，如让AI使用nbformat编辑notebook，让AI以notebook为工具分析数据，或将论文 Markdown 草稿转换为国赛规范 LaTeX 并修复编译问题  
+
+当前已有项目 skills：
+- `edit-notebook-with-nbformat`：使用 nbformat 安全编辑 Jupyter Notebook
+- `analyze-data-using-notebook`：以 Notebook 为叙事工具开展数据分析
+- `cumcm-paper-polisher`：默认仅做论文 Markdown/TeX 到国赛规范 LaTeX 的转换、排版和编译修复；写作修改意见与优秀论文参考为显式启用模式  
   
 assets 文件夹存放队员产出的将用于论文叙事的资产，如图片，实验结果等，后续可视解题具体情况在文件夹下进一步创立目录  
   

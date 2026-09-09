@@ -1,0 +1,124 @@
+\clearpage
+\section*{常用 \LaTeX{} 示例代码（赛前学习，提交前删除）}
+本节只用于赛前熟悉写法，正式提交前请整体删除。本节中的图片示例写在代码框里，不会真的读取图片文件；正式使用时，把图片放入 \texttt{figures/} 文件夹，再把对应代码复制到正文位置。
+
+\subsection*{1. 大标题、小标题}
+\begin{tcode}
+\title{论文题目}
+
+\section{一级标题}
+这里写正文。
+
+\subsection{二级标题}
+这里写更细的说明。
+
+\subsubsection{三级标题}
+三级标题不要过多使用，除非结构确实需要。
+\end{tcode}
+
+\subsection*{2. 单张图片}
+\begin{tcode}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{figures/result1.png}
+  \caption{图片标题}
+  \label{fig:result1}
+\end{figure}
+
+如图~\cref{fig:result1} 所示，模型结果呈现出明显变化。
+\end{tcode}
+
+\subsection*{3. 并排图片}
+\begin{tcode}
+\begin{figure}[!htbp]
+  \centering
+  \begin{minipage}[c]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/result_a.png}
+    \subcaption{方案 A}
+    \label{fig:result-a}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[c]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/result_b.png}
+    \subcaption{方案 B}
+    \label{fig:result-b}
+  \end{minipage}
+  \caption{不同方案的结果对比}
+  \label{fig:compare}
+\end{figure}
+
+图~\cref{fig:compare} 给出了整体对比，其中 \cref{fig:result-a} 为方案 A。
+\end{tcode}
+
+\subsection*{4. 公式与引用}
+\begin{tcode}
+行内公式写法：目标函数 $f(x)$ 用于衡量方案优劣。
+
+不编号公式：
+\[
+  z = \sum_{i=1}^{n} c_i x_i
+\]
+
+带编号公式：
+\begin{equation}
+  \min Z = \sum_{i=1}^{n} c_i x_i
+  \label{eq:objective}
+\end{equation}
+
+由式~\cref{eq:objective} 可得到最优目标值。
+
+多行对齐公式：
+\begin{align}
+  s_i &= x_i - \bar{x},\\
+  \sigma &= \sqrt{\frac{1}{n}\sum_{i=1}^{n}s_i^2}.
+\end{align}
+\end{tcode}
+
+\subsection*{5. 三线表}
+\begin{tcode}
+\begin{table}[!htbp]
+  \centering
+  \caption{不同模型的评价结果}
+  \label{tab:model-compare}
+  \begin{tabularx}{\textwidth}{cXXX}
+    \toprule
+    模型 & 准确率 & 运行时间 & 说明 \\
+    \midrule
+    模型一 & 0.912 & 12.5 s & 基准模型 \\
+    模型二 & 0.936 & 18.7 s & 综合表现较好 \\
+    模型三 & 0.928 & 10.1 s & 速度较快 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+从表~\cref{tab:model-compare} 可以看出，模型二的准确率最高。
+\end{tcode}
+
+\subsection*{6. 参考文献引用}
+\begin{tcode}
+正文中引用文献：灰色预测模型常用于小样本时间序列预测~\cite{ref:grey}。
+
+\begin{thebibliography}{99}
+  \bibitem{ref:grey}
+  邓聚龙. 灰色系统理论教程[M]. 武汉: 华中理工大学出版社, 1990.
+
+  \bibitem{ref:data}
+  国家统计局. 中国统计年鉴[M]. 北京: 中国统计出版社, 2025.
+\end{thebibliography}
+\end{tcode}
+
+\subsection*{7. 代码块}
+\begin{tcode}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def normalize(x):
+    x = np.asarray(x, dtype=float)
+    return (x - x.min()) / (x.max() - x.min())
+
+scores = normalize([82, 91, 76, 88])
+print(scores)
+\end{lstlisting}
+\end{tcode}
