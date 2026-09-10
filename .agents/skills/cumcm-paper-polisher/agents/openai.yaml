@@ -1,0 +1,7 @@
+interface:
+  display_name: "国赛 LaTeX 排版助手"
+  short_description: "国赛论文Markdown转LaTeX、排版与编译修复"
+  brand_color: "#1F4E79"
+  default_prompt: "使用 $cumcm-paper-polisher，在 26MathModeling 的仅格式转换模式下，把 Markdown 草稿转成国赛规范 LaTeX，处理图表公式并修复编译问题。"
+policy:
+  allow_implicit_invocation: true
