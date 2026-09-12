@@ -54,3 +54,20 @@ $$
 
 主方案暂取 $\eta_c=\eta_d=0.9$。题目"充放电效率为90%"也可能被理解为往返效率90%，此时应取 $\eta_c=\eta_d=\sqrt{0.9}$；后者先按下不表，统一理解为 $\eta_c=\eta_d=0.9$。
 
+## 4. 问题二扩展：日期、情景与两阶段记号
+
+问题二需要对全年逐日建模并引入随机情景，在第 1—3 节基础上增加以下记号。
+
+**统一记号规则**：带上标 $\omega$ 的量为情景设想值；不带 $\omega$ 的量为实际值（附件2实测数据或模型执行后的真实路径）；预测量若引入加 $\widehat{\cdot}$。计划购电量 $G_{d,t}$ 不带 $\omega$，以此体现它是对所有情景统一取值的第一阶段变量（非预期性）。
+
+- 日期：$d\in\mathcal{D}$，$\mathcal{D}$ 为 2025 全年 365 天（数据域）；$\mathcal{D}_{\mathrm{out}}=\{2025\text{-}02\text{-}01,\ldots,12\text{-}31\}$ 为输出域，共 334 天；
+- 历史池：$\mathcal{H}_d=\{j\in\mathcal{D}:j<d,\ j\text{ 与 }d\text{ 同季节}\}$，情景抽样的原料；
+- 情景：$\omega\in\Omega_d\subseteq\mathcal{H}_d$，$\omega$ 本身就是历史日日期，以整天为单位抽样；$\pi_{d,\omega}\ge0$，$\sum_{\omega\in\Omega_d}\pi_{d,\omega}=1$；
+- 情景数据：$L_{d,t}^{\omega},R_{d,t}^{\omega}$ 为情景 $\omega$ 对应历史日在时段 $t$ 的负载、光伏电量（kWh），数据出处即 $L_{d,t}^{\omega}=L_{\omega,t}$；净负载 $N_{d,t}^{\omega}=L_{d,t}^{\omega}-R_{d,t}^{\omega}$（kWh）；
+- 第一阶段决策变量：$G_{d,t}\ge0$，计划购电量；
+- 第二阶段变量（均带 $\omega$）：$C_{d,t}^{\omega},D_{d,t}^{\omega}\in[0,\bar e]$，$S_{d,t}^{\omega}\in[S^{\min},S^{\max}]$（$t\in\mathcal{T}^+$），$E_{d,t}^{\omega}\ge0$（紧急购电，单价 $5P_t$），$W_{d,t}^{\omega}\ge0$（弃置电量，弃光与已购未利用合并）；
+- 实际执行路径：$C_{d,t},D_{d,t},S_{d,t},E_{d,t},W_{d,t}$（不带 $\omega$）；
+- 跨日衔接：$S_{d+1,1}=S_{d,145}$，$S_{2025\text{-}01\text{-}01,1}=6000$；问题二不设 $S_{d,145}=S_{d,1}$ 循环约束；
+- 终端价值（暂不进目标函数，用于形式化"是否考虑跨日储能"的待验证假设）：$V_{d+1}(s)$ 为次日以储能 $s$ 开局的最小期望费用；$\theta_d^{\omega}\ge a_{d,q}S_{d,145}^{\omega}+b_{d,q}$（$q=0,\ldots,Q-1$，$a_{d,q}\le0$）为其分段线性化；
+- 全年结算：$C_{\mathrm{official}}=\sum_{d\in\mathcal{D}_{\mathrm{out}}}\sum_{t\in\mathcal{T}}(P_tG_{d,t}+5P_tE_{d,t})$，只含真实发生的计划费与紧急费，$\theta$ 不计入。
+
