@@ -4,7 +4,9 @@ import numpy as np
 import myh.src.config as config
 
 
-def price_matrix(data):
+def price_matrix(data, price_type="fixed"):
+    if price_type == "varying":
+        return data.price_varying
     return np.broadcast_to(data.price_fixed, (config.N_DAYS, config.T)).copy()
 
 
@@ -19,10 +21,10 @@ def official_cost(GF, G0, E, P, out_slice=None):
             "emergency": emergency, "total": normal + adjust + emergency}
 
 
-def verify(ctrl, data, out_slice=None):
+def verify(ctrl, data, out_slice=None, price_type="fixed"):
     if out_slice is None:
         out_slice = slice(config.OUTPUT_START_IDX, config.OUTPUT_END_IDX + 1)
-    P = price_matrix(data)
+    P = price_matrix(data, price_type)
     L = config.DT * data.load_actual[out_slice]
     R = config.DT * data.pv_actual[out_slice]
     GF, G0, E = ctrl.GF[out_slice], ctrl.G0[out_slice], ctrl.E[out_slice]

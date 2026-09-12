@@ -47,9 +47,12 @@ def _fill_grid(ws, mat, P, G0=None):
         ws.cell(row=row, column=config.T + 3, value=round(float(cost), 6))
 
 
-def write_result(template_path, output_path, ctrl, data):
+def write_result(template_path, output_path, ctrl, data, price_type="fixed", has_adjust=True):
     out_slice = slice(config.OUTPUT_START_IDX, config.OUTPUT_END_IDX + 1)
-    P = np.broadcast_to(data.price_fixed, (config.N_DAYS, config.T))[out_slice]
+    if price_type == "varying":
+        P = data.price_varying[out_slice]
+    else:
+        P = np.broadcast_to(data.price_fixed, (config.N_DAYS, config.T))[out_slice]
     G0 = ctrl.G0[out_slice]
     GF = ctrl.GF[out_slice]
     C = ctrl.C[out_slice]
@@ -59,7 +62,8 @@ def write_result(template_path, output_path, ctrl, data):
 
     wb = openpyxl.load_workbook(template_path)
     _fill_grid(wb["计划购电量"], G0, P)
-    _fill_grid(wb["调整购电量"], GF, P, G0=G0)
+    if has_adjust:
+        _fill_grid(wb["调整购电量"], GF, P, G0=G0)
 
     ws_cd = wb["充放电量"]
     ws_cd.delete_rows(2, ws_cd.max_row)
