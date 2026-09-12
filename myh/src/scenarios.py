@@ -49,7 +49,12 @@ class ScenarioEngine:
             R = np.repeat(R_hat[None, :], n_scen, axis=0)
             src = np.zeros(n_scen, dtype=int)
         else:
-            src = rng.choice(d, size=n_scen, replace=True)
+            # 同季节条件化（与第二问一致）：只从与 d 同季节的历史日抽样
+            pool = np.flatnonzero(self.data.season[:d] == self.data.season[d])
+            if pool.size >= 5:
+                src = rng.choice(pool, size=n_scen, replace=True)
+            else:
+                src = rng.choice(d, size=n_scen, replace=True)
             L = np.maximum(0.0, L_hat[None, :] + eps_L[src])
             R = np.maximum(0.0, R_hat[None, :] + eps_R[src])
 

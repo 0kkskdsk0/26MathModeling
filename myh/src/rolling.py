@@ -123,7 +123,10 @@ class RollingController:
         for stage in range(4):
             r0 = config.STAGE_START[stage]
             if stage in self.update_set:
-                term_a, term_b = self.terminal_value(d)
+                if config.USE_TERMINAL_VALUE:
+                    term_a, term_b = self.terminal_value(d)
+                else:
+                    term_a = term_b = None     # 跨日近视：与第二问一致，不含 θ
                 G0_ref = None if G0 is None else G0[r0:]
                 plan = self.planning_solve(d, stage, S[r0], G0_ref, term_a, term_b)
                 GF[r0:] = plan

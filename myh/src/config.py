@@ -4,8 +4,9 @@
 """
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "ProblemC" / "附件"
+BASE_DIR = Path(__file__).resolve().parent.parent      # myh/
+REPO_DIR = BASE_DIR.parent                              # 仓库根目录
+DATA_DIR = REPO_DIR / "ProblemC" / "附件"
 TEMPLATE_DIR = DATA_DIR / "附件5"
 OUTPUT_DIR = BASE_DIR / "output"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -50,6 +51,10 @@ USE_CVAR = False
 # 报童下界（方案 A）：计划购电量不得低于情景净负荷的该分位，对冲 wait-and-see 乐观偏差。
 # 理论最优 0.8（应急电 5 倍价），None 关闭。
 G_FLOOR_Q = 0.8
+
+# 跨日近视（与第二问一致）：默认不含终端价值 θ，接受"储能的跨日影响有限"。
+# 设 True 可做 θ 消融实验（终端价值用式 24-26 的确定性 24h 影子）。
+USE_TERMINAL_VALUE = False
 
 # 终端价值（式 24-26：17 网格 + 确定性 24h 影子 + 按周缓存）
 TERM_GRID_STEP = 600.0

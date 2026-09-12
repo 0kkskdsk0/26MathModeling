@@ -37,6 +37,11 @@ class Data:
         self.pv_forecast = _load_attach3()
         self.price_varying = _load_attach4()
 
+        # 季节（与第二问一致的同季节条件化）：冬=0 春=1 夏=2 秋=3
+        dates = pd.date_range("2025-01-01", periods=config.N_DAYS, freq="D")
+        month = dates.month.to_numpy()
+        self.season = ((month % 12) // 3).astype(int)
+
 
 _DATA = None
 
