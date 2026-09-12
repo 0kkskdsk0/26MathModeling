@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "adopted_method": "kernel",
+  "selected_feature_groups": [
+    "season",
+    "load_mean_3d"
+  ],
+  "bandwidth_h": 0.8509591315907177,
+  "bandwidth_limit": "finite",
+  "bandwidth_search_status": "interior_optimum",
+  "ablation_h": 1.0,
+  "feature_min_gain_pct": 0.5,
+  "feature_min_improved_days": 5,
+  "adoption_threshold_pct": 3.0,
+  "mean_es_improvement_pct": 8.065878769291947,
+  "history_dates": [
+    "2025-01-04",
+    "2025-01-05",
+    "2025-01-06",
+    "2025-01-07",
+    "2025-01-08",
+    "2025-01-09",
+    "2025-01-10",
+    "2025-01-11",
+    "2025-01-12",
+    "2025-01-13",
+    "2025-01-14",
+    "2025-01-15",
+    "2025-01-16",
+    "2025-01-17",
+    "2025-01-18",
+    "2025-01-19",
+    "2025-01-20",
+    "2025-01-21",
+    "2025-01-22",
+    "2025-01-23"
+  ],
+  "validation_dates": [
+    "2025-01-24",
+    "2025-01-25",
+    "2025-01-26",
+    "2025-01-27",
+    "2025-01-28",
+    "2025-01-29",
+    "2025-01-30",
+    "2025-01-31"
+  ],
+  "rule_available_from": "2025-02-01",
+  "pool_policy": "fixed_jan04_jan23",
+  "standardizer": {
+    "columns": [
+      "season_sin",
+      "season_cos",
+      "load_mean_3d"
+    ],
+    "mean": [
+      0.0,
+      0.0,
+      113244.89182777777
+    ],
+    "scale": [
+      1.0,
+      1.0,
+      12511.227180479227
+    ]
+  },
+  "source": "ProblemC/附件/附件2.xlsx (January rows only)",
+  "january_values_sha256": "dda176ba80f78fe9949267f4e4036a378a9b97cad066643ec8190d07d522a64e",
+  "scenario": "144-dimensional load minus PV power, kW, Euclidean norm",
+  "structural_exception": "season: mandatory calendar prior; not validated in January"
+}

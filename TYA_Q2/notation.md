@@ -37,7 +37,7 @@ $$
 - SOC递推：
 
 $$
-S_{t+1}=S_t+\eta_c C_t-\frac{D_t}{\eta_d}.
+S_{t+1}=S_t+\eta C_t-\frac{D_t}{\eta}.
 $$
 
 - 基础约束：

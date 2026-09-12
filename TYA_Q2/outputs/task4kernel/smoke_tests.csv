@@ -1,0 +1,9 @@
+﻿date,weight_sum,checked_rule_bandwidth_pairs,history_unchanged,features_exactly_unchanged,prefix_only_features_identical,scaler_exactly_unchanged,weights_exactly_unchanged,es_with_saved_truth_exactly_unchanged,target_observations_actually_changed,max_absolute_weight_change,passed
+2025-01-24,1,77,True,True,True,True,True,True,True,0,True
+2025-01-25,1,77,True,True,True,True,True,True,True,0,True
+2025-01-26,1.0000000000000002,77,True,True,True,True,True,True,True,0,True
+2025-01-27,0.99999999999999967,77,True,True,True,True,True,True,True,0,True
+2025-01-28,1,77,True,True,True,True,True,True,True,0,True
+2025-01-29,1,77,True,True,True,True,True,True,True,0,True
+2025-01-30,1,77,True,True,True,True,True,True,True,0,True
+2025-01-31,1,77,True,True,True,True,True,True,True,0,True
