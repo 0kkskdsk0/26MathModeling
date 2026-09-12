@@ -1,0 +1,79 @@
+{
+  "rule": {
+    "schema_version": 1,
+    "groups": [
+      "season",
+      "net_lag_7d",
+      "pv_mean_3d",
+      "load_lag_7d",
+      "net_mean_7d",
+      "low_load_day"
+    ],
+    "bandwidth": 1.0438414641946645,
+    "bandwidth_limit": "finite",
+    "season_month_radius": 1,
+    "warmup_days": 7,
+    "scaling": "rolling_pool",
+    "adopted": true,
+    "natural_scale_columns": [
+      "season_sin",
+      "season_cos",
+      "weekend",
+      "low_load_day",
+      "wd0",
+      "wd1",
+      "wd2",
+      "wd3",
+      "wd4",
+      "wd5",
+      "wd6"
+    ]
+  },
+  "legacy_groups": [
+    "season",
+    "load_mean_3d"
+  ],
+  "legacy_bandwidth": 0.3906016530185624,
+  "mean_es_equal": 1334.4856967242904,
+  "mean_es_legacy": 1248.0404158275282,
+  "mean_es_revised": 551.0714018547723,
+  "improvement_vs_equal_pct": 58.70533470628681,
+  "improvement_vs_legacy_pct": 55.845067606294,
+  "adoption_threshold_pct": 3.0,
+  "adopted": true,
+  "protocol_groups": [
+    "season",
+    "net_lag_7d",
+    "pv_mean_3d",
+    "load_lag_7d",
+    "net_mean_7d"
+  ],
+  "supplementary_passed": [
+    "low_load_day"
+  ],
+  "final_groups": [
+    "season",
+    "net_lag_7d",
+    "pv_mean_3d",
+    "load_lag_7d",
+    "net_mean_7d",
+    "low_load_day"
+  ],
+  "select_window_groups": [
+    "season",
+    "net_lag_7d",
+    "pv_mean_3d"
+  ],
+  "revised_bandwidth": 1.0438414641946645,
+  "protocol_bandwidth": 1.0127579494695649,
+  "select_window_bandwidth": 0.6228518305236517,
+  "select_window_legacy_bandwidth": 0.3767594196508467,
+  "bandwidth_status": "interior_optimum",
+  "validation_days": 334,
+  "select_days": 150,
+  "confirm_days": 184,
+  "rule_available_from": "2025-02-01",
+  "warmup_days": 7,
+  "pool_rule": "same season (month ring distance <= 1) and j < d",
+  "source": "ProblemC/附件/附件2.xlsx (full year 365 days)"
+}

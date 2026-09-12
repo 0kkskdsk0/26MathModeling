@@ -1,0 +1,3 @@
+﻿feature,description,groups_before,groups_after,h,mean_es_before,mean_es_after,relative_improvement_pct,improved_days,validation_days,passes_rule,accepted,reason
+low_load_day,低负载日标志：按全年数据，低负载落在周五与周六（取自然尺度）,season;net_lag_7d;pv_mean_3d,season;net_lag_7d;pv_mean_3d;low_load_day,1,620.3777338,584.6118344,5.765181029,263,334,True,True,pass
+weekday7,星期几的七维指示编码（同一星期几距离为 0，取自然尺度）,season;net_lag_7d;pv_mean_3d;low_load_day,season;net_lag_7d;pv_mean_3d;low_load_day;weekday7,1,584.6118344,577.1893714,1.269639535,156,334,False,,post_hoc_candidate
