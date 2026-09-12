@@ -7,19 +7,26 @@ import numpy as np
 
 import myh.src.config as config
 from myh.src.scenarios import ScenarioEngine
-from myh.src.forecast import load_forecast, pv_forecast
+from myh.src.forecast import load_forecast, pv_forecast, price_forecast
 from myh.src.dispatch import solve_planning, solve_mpc
 from myh.src.terminal_value import compute_terminal_value
 
 
 class RollingController:
-    def __init__(self, data, update_set, seed=0):
+    def __init__(self, data, update_set, seed=0, price_type="fixed", price_info="causal"):
         if 0 not in update_set or not set(update_set) <= set(range(4)):
             raise ValueError("update_set 必须包含 0 且仅含 0/1/2/3")
+        if price_type not in ("fixed", "varying"):
+            raise ValueError("price_type 须为 fixed/varying")
+        if price_info not in ("causal", "perfect"):
+            raise ValueError("price_info 须为 causal/perfect")
         self.data = data
         self.update_set = sorted(set(update_set))
         self.seed = int(seed)
-        self.engine = ScenarioEngine(data)
+        self.price_type = price_type
+        self.varying = price_type == "varying"
+        self.price_info = price_info
+        self.engine = ScenarioEngine(data, price_type=price_type)
         self.rng = np.random.default_rng(seed)
 
         self.load_actual = data.load_actual
@@ -27,6 +34,8 @@ class RollingController:
         self.pv_fcst = data.pv_forecast
         self.load_mean = data.load_mean
         self.price_fixed = data.price_fixed
+        self.price_varying = data.price_varying
+        self.season = data.season
 
         for name in ("GF", "G0", "C", "D", "E", "W"):
             setattr(self, name, np.zeros((config.N_DAYS, config.T)))
@@ -46,7 +55,11 @@ class RollingController:
         started = time.perf_counter()
         load_next = load_forecast(self.load_actual, self.load_mean, d + 1, 0)
         pv_mean = config.DT * self._rolling_mean_pv(d)
-        price_next = self.price_fixed.copy()
+        if self.varying:
+            price_next = price_forecast(self.price_varying, self.price_fixed,
+                                        self.season, d + 1, 0)
+        else:
+            price_next = self.price_fixed.copy()
         self._term_cache = compute_terminal_value(load_next, pv_mean, price_next)
         self._term_week = week
         self.timings["terminal"].append(time.perf_counter() - started)
@@ -63,9 +76,12 @@ class RollingController:
     # ------------------------------------------------------------------
     def planning_solve(self, d, k, s0, G0_ref, term_a, term_b):
         r0 = config.STAGE_START[k]
-        scen = self.engine.generate(d, k, self.rng)
+        scen = self.engine.generate(d, k, self.rng, price_info=self.price_info)
         H = config.T - r0
-        p = np.broadcast_to(self.price_fixed[r0:], (scen["L"].shape[0], H)).copy()
+        if self.varying:
+            p = scen["p"][:, r0:]
+        else:
+            p = np.broadcast_to(self.price_fixed[r0:], (scen["L"].shape[0], H)).copy()
         started = time.perf_counter()
         res = solve_planning(scen["L"][:, r0:], scen["R"][:, r0:], p,
                              scen["probs"], s0, G0=G0_ref,
@@ -88,15 +104,25 @@ class RollingController:
             # 情景 MPC：当前区间 here-and-now，未来 wait-and-see（式 22-23 多情景版）
             scen = self.engine.generate(d, k, self.rng,
                                         n_scen=config.MPC_N_SCENARIOS,
-                                        r=r, observed_current=True)
+                                        r=r, observed_current=True,
+                                        price_info=self.price_info)
             L = scen["L"][:, r:]
             R = scen["R"][:, r:]
-            p = np.broadcast_to(self.price_fixed[r:],
-                                (L.shape[0], config.T - r)).copy()
+            if self.varying:
+                p = scen["p"][:, r:]
+            else:
+                p = np.broadcast_to(self.price_fixed[r:],
+                                    (L.shape[0], config.T - r)).copy()
 
             started = time.perf_counter()
+            # LP 优先：先解无二元互斥的 LP，出现同时充放电或紧急购电充电才转 MILP（式 23）
             res = solve_mpc(L, R, p, scen["probs"], S[r], GF[r:],
-                            term_a=term_a, term_b=term_b, mutex=True)
+                            term_a=term_a, term_b=term_b, mutex=False)
+            if res["status"] == "ok" and (
+                    res["C"][0] * res["D"][0] > 1e-6 or
+                    res["C"][0] * res["E"][0] > 1e-6):
+                res = solve_mpc(L, R, p, scen["probs"], S[r], GF[r:],
+                                term_a=term_a, term_b=term_b, mutex=True)
             self.timings["mpc"].append(time.perf_counter() - started)
             if res["status"] != "ok":
                 raise RuntimeError(f"MPC day={d} interval={r}: {res.get('message')}")

@@ -1,15 +1,18 @@
-"""因果预测层：负载、光伏（对齐 problem3_solving_final.md 式 5-9）。"""
+"""因果预测层：负载、光伏、电价（对齐 problem3/problem4_final 式 5-9、式1-6）。"""
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 import myh.src.config as config
 
 _EPS = 1e-6
+_EPS_PRICE = 1e-4
 _scale_bounds_cache = {}
+_price_cache = {}
 
 
 def reset_forecast_cache():
     _scale_bounds_cache.clear()
+    _price_cache.clear()
 
 
 def scale_bounds(load_actual, d):
@@ -62,3 +65,57 @@ def pv_forecast(pv_actual, pv_forecast_arr, d, k):
     for m in range(t0, config.T):
         R[m] = np.trapezoid(vals[m * n_sub:(m + 1) * n_sub + 1], dx=config.DT / n_sub)
     return R
+
+
+def price_forecast(price_varying, price_fixed, season, d, t0):
+    """电价三尺度因果预测（problem4_final 式 1-6），长度 144。
+
+    t<t0 填真实价；t>=t0 填预测 = 周同期基线 + 同星期日内时段效应 + 水平修正。
+    三尺度：昼夜=周基线的日内形状+时段效应；周内=周基线(d-7)+同星期效应；季节=季节基线+水平修正。
+    """
+    key = (d, t0)
+    if key in _price_cache:
+        return _price_cache[key].copy()
+
+    T = config.T
+    phat = np.empty(T)
+    if t0 > 0:
+        phat[:t0] = price_varying[d, :t0]
+
+    # 季节基线（同季节历史日均值，冷启动与季节水平参考）
+    seas = np.flatnonzero(season[:d] == season[d])
+    bar_seas = price_varying[seas].mean(axis=0) if len(seas) >= 5 else price_fixed
+
+    # 周同期基线
+    m = price_varying[d - 7] if d >= 7 else bar_seas.copy()
+
+    # 同星期日内时段效应 gamma（零和）
+    gamma = np.zeros(T)
+    if d >= 7:
+        wd = d % 7
+        same = [j for j in range(7, d) if j % 7 == wd]
+        if len(same) >= 4:
+            resid = np.zeros((len(same), T))
+            for i, j in enumerate(same):
+                e = price_varying[j] - price_varying[j - 7]
+                resid[i] = e - np.median(e)
+            gamma = np.median(resid, axis=0)
+            gamma -= gamma.mean()
+
+    # 水平修正 delta（最近至多 36 个已实现价格）
+    delta = 0.0
+    if t0 > 0:
+        lo = max(0, t0 - 36)
+        z = price_varying[d, lo:t0] - m[lo:t0] - gamma[lo:t0]
+        delta = float(np.median(z))
+        if d >= 7:
+            z_all = np.concatenate([
+                price_varying[j] - price_varying[j - 7] for j in range(7, d)
+            ])
+            zlo, zhi = np.percentile(z_all, [5, 95])
+            delta = float(np.clip(delta, zlo, zhi))
+
+    phat[t0:] = m[t0:] + gamma[t0:] + delta
+    phat[t0:] = np.maximum(phat[t0:], _EPS_PRICE)
+    _price_cache[key] = phat
+    return phat.copy()
