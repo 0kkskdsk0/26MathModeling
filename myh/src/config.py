@@ -52,9 +52,9 @@ USE_CVAR = False
 # 理论最优 0.8（应急电 5 倍价），None 关闭。
 G_FLOOR_Q = 0.8
 
-# 跨日近视（与第二问一致）：默认不含终端价值 θ，接受"储能的跨日影响有限"。
-# 设 True 可做 θ 消融实验（终端价值用式 24-26 的确定性 24h 影子）。
-USE_TERMINAL_VALUE = False
+# 跨日终端价值 θ：实测删 θ（跨日近视）使应急电暴涨约 4.6 倍，故必须保留。
+# True = 含 θ（确定性 24h 影子，见 problem3_final 6.3）；False = 跨日近视（仅消融对照）。
+USE_TERMINAL_VALUE = True
 
 # 终端价值（式 24-26：17 网格 + 确定性 24h 影子 + 按周缓存）
 TERM_GRID_STEP = 600.0
