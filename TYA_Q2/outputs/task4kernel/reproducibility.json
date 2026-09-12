@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "fresh_output_directory": true,
+  "new_python_process": true,
+  "environment": {
+    "python": "3.13.11",
+    "is_venv": false,
+    "user_site_enabled": true,
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "openpyxl": "3.1.5",
+      "matplotlib": "3.10.8",
+      "pillow": "12.1.1"
+    }
+  },
+  "dependency_environment": "same installed dependencies",
+  "files": {
+    "feature_ablation.csv": {
+      "sha256": "4e680ea2ad554eca3516248f32cb094bb66c76c3e577d02b20b03f2b996033e8",
+      "identical": true
+    },
+    "feature_ablation_daily.csv": {
+      "sha256": "df115036c4b8e12332d223f0535deb9e1425891fdb2793184036b9761f95fb32",
+      "identical": true
+    },
+    "bandwidth_search.csv": {
+      "sha256": "faeb81a80d1505fd3b7ca3dfe84c9f412a566c2642f53989e12e0e222574c592",
+      "identical": true
+    },
+    "comparison.csv": {
+      "sha256": "db3714d479150ed6912794f3b4050449b38e5d8a5a3a004df0578b82f2520a28",
+      "identical": true
+    },
+    "smoke_tests.csv": {
+      "sha256": "c43b176c0108a7640c0decf7bc4fa9c2cca5c3cf6086291252a8c05780c39b4f",
+      "identical": true
+    },
+    "daily_features.csv": {
+      "sha256": "ec7a5d0d7845b0b226c123dac4fd7147ee428ff6de4afea9aaf085fe9deec01b",
+      "identical": true
+    },
+    "weights.csv": {
+      "sha256": "99803f3ceb23e2172b6d11b507cc5b7f9ad96bbb644fa1b5874e32eec62bd46b",
+      "identical": true
+    },
+    "frozen_rule.json": {
+      "sha256": "6331f35069a61c35ce4560369f40ff8b0d6dc61d5969c3c55ca9c83b915ded26",
+      "identical": true
+    },
+    "report.md": {
+      "sha256": "54d533b62f1d7ac0289b6de36f7978b17c21e0e889420e68a26e41958c4a43f0",
+      "identical": true
+    },
+    "protocol.md": {
+      "sha256": "5e7c3bb0caf9822557605c63ae5d2411de497f172471f140024450efadc4fb85",
+      "identical": true
+    },
+    "bandwidth_curve.png": {
+      "sha256": "e175d74e7933f195705406c4acbf3479a4f4a477010da5d0c99d5cd03c65d956",
+      "identical": true
+    },
+    "paired_es.png": {
+      "sha256": "7869ddb7919c8619da6aa6384d5e9849ce50b12a057ae70f89f14d0115a79d24",
+      "identical": true
+    }
+  }
+}

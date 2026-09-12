@@ -59,7 +59,7 @@ $$
 | $\omega,\Omega_d$ | 情景指标（$\omega$ 本身就是历史日日期）及第 $d$ 天的情景集合 | $\Omega_d\subseteq\mathcal{H}_d$，以整天为单位抽样 |
 | $\pi_{d,\omega}$ | 情景权重 | $\ge0$，$\sum_{\omega\in\Omega_d}\pi_{d,\omega}=1$，基线取等权 |
 | $L_{d,t}^{\omega},R_{d,t}^{\omega}$ | 情景 $\omega$ 所对应历史日在时段 $t$ 的负载、光伏电量 | kWh |
-| $N_{d,t}^{\omega}$ | 情景 $\omega$ 下时段 $t$ 的净负载电量，$N_{d,t}^{\omega}=L_{d,t}^{\omega}-R_{d,t}^{\omega}$ | kWh |
+| $N_{d,t}^{\omega}$ | 情景 $\omega$ 下时段 $t$ 的净负荷功率，$N_{d,t}^{\omega}=\frac{L_{d,t}^{\omega}-R_{d,t}^{\omega}}{\Delta}$ | kWh |
 | $G_{d,t}$ | 时段 $t$ 的计划购电量，第一阶段决策变量 | kWh |
 | $C_{d,t}^{\omega},D_{d,t}^{\omega}$ | 情景 $\omega$ 下交流母线侧充电量、放电量，第二阶段变量 | kWh |
 | $S_{d,t}^{\omega}$ | 情景 $\omega$ 下时段 $t$ 开始时的储电量，$t\in\mathcal{T}^+$ | kWh |
@@ -105,7 +105,13 @@ $$
 
 需要声明该论证的适用范围：它依赖附件 1 电价“低谷横跨日界”这一形状，问题四引入波动电价后低谷位置不再固定，跨日近视假设须重新检查。综上，接受“储能跨日影响较小”的假设，主模型采用只覆盖单日的两阶段随机规划，$\theta_d^{\omega}$ 保留定义但不进入目标函数。
 
+#### 从候选历史池 $\mathcal{H}_d$ 中抽样、赋权的规则
 
+目前需要研究一个“从候选历史池 $\mathcal{H}_d$ 中抽样、赋权”的好规则，计划如下：  
+1. 对附件二的一月数据做特征研究，根据常识提出一些特征（如是否为节假日（包括周末），时间上的距离远近，近三天的光伏情况等），在一月数据上做验证，以用作“判断一个历史信息是否与今日相似”的信息指标；注意只能使用一月数据，不引入前视偏差；不根据后续时间推移数据不断增加做滚动更新；计划是产出一个特征池，而后逐个将其加入选中特征；选中一个特征的标准：当且仅当加入该特征，其和已有特征一起对验证日（1.24~1.31）的平均ES指标改善了
+2. 采用高斯核，并输入在“1”中检验得到有效的特征，作为判断两个日子相似程度的度量，以分配权重 $\pi_{d,\omega}$; 同时还要确定带宽h，在一月日子上挑选1.24~1.31做网格搜索（从粗往细搜索，多搜几轮），确定该数据的最优h，以ES指标做筛选h的标准
+3. 拿着上面确定的这个核函数权重分配方法在一月份数据上测试（不涉及2月及之后的数据，保持题意所希望我们具有的“无知性”），并与将所有历史信息等权重的基线方法做对比，指标使用ES
+筛选指标ES的定义： $ES_d = \sum_{\omega} \pi_{d,\omega} \|\boldsymbol{x}_\omega - \boldsymbol{y}_d\| - \frac{1}{2} \sum_{\omega} \sum_{\omega'} \pi_{d,\omega} \pi_{d,\omega'} \|\boldsymbol{x}_\omega - \boldsymbol{x}_{\omega'}\|$
 
 #### 形式化建模
 
@@ -124,7 +130,7 @@ $$
 $$
 
 $$
-S_{d,t+1}^{\omega} = S_{d,t}^{\omega} + \eta_c\, C_{d,t}^{\omega} - \frac{D_{d,t}^{\omega}}{\eta_d}, \qquad \forall \omega \in \Omega_d,\ t \in \mathcal{T}
+S_{d,t+1}^{\omega} = S_{d,t}^{\omega} + \eta\, C_{d,t}^{\omega} - \frac{D_{d,t}^{\omega}}{\eta}, \qquad \forall \omega \in \Omega_d,\ t \in \mathcal{T}
 $$
 
 $$

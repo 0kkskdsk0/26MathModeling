@@ -1,0 +1,10 @@
+﻿stage,feature,description,features_before,features_after,h,mean_es_before,mean_es_after,relative_improvement_pct,improved_days,validation_days,passes_es_rule,accepted,reason,retained_in_final_rule,structural_exception
+structural,season,月份圆周位置（sin/cos 为同一个季节特征的两维编码）,,season,1,8411.467321565884,8411.467321565884,0,0,8,False,False,required_prior_not_identifiable_in_january,True,True
+forward,weekend,周六或周日标志；不判断法定节假日及调休,season,season;weekend,1,8411.467321565884,8662.7273279471356,-2.9871126733983053,5,8,False,False,insufficient_mean_gain_or_daily_stability,False,False
+forward,pv_mean_3d,前三个完整日的光伏日总电量均值（kWh）,season,season;pv_mean_3d,1,8411.467321565884,10023.654255878271,-19.166536261502841,3,8,False,False,insufficient_mean_gain_or_daily_stability,False,False
+forward,recency,自 2025-01-01 起的日历天数；差值表示时间距离,season,season;recency,1,8411.467321565884,9123.138888155343,-8.4607303266200375,5,8,False,False,insufficient_mean_gain_or_daily_stability,False,False
+forward,pv_lag_1d,前一日光伏日总电量（kWh）,season,season;pv_lag_1d,1,8411.467321565884,9569.2646296665989,-13.764510564432397,5,8,False,False,insufficient_mean_gain_or_daily_stability,False,False
+forward,pv_std_3d,前三日光伏日总电量总体标准差（kWh，ddof=0）,season,season;pv_std_3d,1,8411.467321565884,10329.619199160312,-22.804010338083838,4,8,False,False,insufficient_mean_gain_or_daily_stability,False,False
+forward,pv_trend_3d,前一日与前三日光伏日总电量之差的一半（kWh/day）,season,season;pv_trend_3d,1,8411.467321565884,8855.6262909256711,-5.2803982037833341,4,8,False,False,insufficient_mean_gain_or_daily_stability,False,False
+forward,load_mean_3d,前三个完整日的负载日总电量均值（kWh）,season,season;load_mean_3d,1,8411.467321565884,7756.5986416579926,7.7854273799399447,5,8,True,True,pass,True,False
+conditional_1,load_mean_3d,前三个完整日的负载日总电量均值（kWh）,season,season;load_mean_3d,1,8411.467321565884,7756.5986416579926,7.7854273799399447,5,8,True,True,pass,True,False
