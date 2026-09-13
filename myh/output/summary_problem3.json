@@ -3,22 +3,22 @@
     "update_set": [
       0
     ],
-    "cost_normal": 17690030.35,
+    "cost_normal": 17760906.92,
     "cost_adjust": 0.0,
-    "cost_emergency": 230166.66,
-    "cost_total": 17920197.02,
-    "emergency_kwh": 67985.19
+    "cost_emergency": 195099.41,
+    "cost_total": 17956006.33,
+    "emergency_kwh": 57497.6
   },
   "M1": {
     "update_set": [
       0,
       1
     ],
-    "cost_normal": 18675930.63,
-    "cost_adjust": 1103360.51,
-    "cost_emergency": 388156.6,
-    "cost_total": 20167447.74,
-    "emergency_kwh": 101879.82
+    "cost_normal": 18086866.6,
+    "cost_adjust": 788125.31,
+    "cost_emergency": 206282.3,
+    "cost_total": 19081274.21,
+    "emergency_kwh": 56285.67
   },
   "M2": {
     "update_set": [
@@ -26,11 +26,11 @@
       1,
       2
     ],
-    "cost_normal": 18022259.48,
-    "cost_adjust": 1274496.37,
-    "cost_emergency": 393632.86,
-    "cost_total": 19690388.71,
-    "emergency_kwh": 113064.18
+    "cost_normal": 17684240.88,
+    "cost_adjust": 901401.0,
+    "cost_emergency": 237948.84,
+    "cost_total": 18823590.72,
+    "emergency_kwh": 67255.31
   },
   "M3": {
     "update_set": [
@@ -39,15 +39,15 @@
       2,
       3
     ],
-    "cost_normal": 18057455.9,
-    "cost_adjust": 1262380.06,
-    "cost_emergency": 363261.0,
-    "cost_total": 19683096.95,
-    "emergency_kwh": 98991.45,
+    "cost_normal": 17599865.6,
+    "cost_adjust": 953569.76,
+    "cost_emergency": 222941.82,
+    "cost_total": 18776377.18,
+    "emergency_kwh": 61533.1,
     "verify": {
-      "max_bal": 4.1154635255225e-11,
+      "max_bal": 4.547473508864641e-13,
       "max_soc": 9.094947017729282e-13,
-      "cost_res": -3.725290298461914e-09,
+      "cost_res": 3.725290298461914e-09,
       "soc_viol": 0,
       "rate_viol": 0,
       "simultaneous_cd": 0,
@@ -55,8 +55,8 @@
     }
   },
   "deltas": {
-    "dC6": -2247250.72,
-    "dC12": 477059.03,
-    "dC18": 7291.76
+    "dC6": -1125267.88,
+    "dC12": 257683.49,
+    "dC18": 47213.54
   }
 }

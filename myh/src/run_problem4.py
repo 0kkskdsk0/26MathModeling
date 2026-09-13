@@ -2,9 +2,12 @@
 
 C2/C3 为因果口径主结果（写 result4-2/4-3），PI2/PI3 为完美价格信息基准（只进 summary）。
 
-用法：python run_problem4.py [--seed 0] [--skip-pi] [--days N] [--jobs 4]
+用法：
+  python -m myh.src.run_problem4 --jobs 4                          # 默认
+  python -m myh.src.run_problem4 --jobs 4 --no-floor --mpc-nscen 50 --tag _nofloor
 """
 import argparse
+import json
 from concurrent.futures import ProcessPoolExecutor
 
 import myh.src.config as config
@@ -16,7 +19,9 @@ from myh.src.export import write_result
 
 def _run_config(spec):
     """单配置完整运行（进程池工作函数）。"""
-    name, update_set, price_info, has_adjust, outfile, seed, days = spec
+    name, update_set, price_info, has_adjust, outfile, seed, days, g_floor_q, mpc_nscen, tag = spec
+    config.G_FLOOR_Q = g_floor_q
+    config.MPC_N_SCENARIOS = mpc_nscen
     data = get_data()
     ctrl = RollingController(data, update_set, seed=seed,
                              price_type="varying", price_info=price_info)
@@ -36,7 +41,8 @@ def _run_config(spec):
     if name == "4-3_causal_C3":
         summ["verify"] = verify(ctrl, data, out_slice=out, price_type="varying")
     if outfile is not None and days == config.N_DAYS:
-        write_result(config.TEMPLATE_DIR / outfile, config.OUTPUT_DIR / outfile,
+        stem = outfile[:-5] if outfile.endswith(".xlsx") else outfile
+        write_result(config.TEMPLATE_DIR / outfile, config.OUTPUT_DIR / f"{stem}{tag}.xlsx",
                      ctrl, data, price_type="varying", has_adjust=has_adjust)
     return name, summ
 
@@ -47,7 +53,17 @@ def main():
     ap.add_argument("--skip-pi", action="store_true", help="跳过 PI-DA 信息基准")
     ap.add_argument("--days", type=int, default=None, help="只跑前 N 天（调试）")
     ap.add_argument("--jobs", type=int, default=None, help="并行进程数")
+    ap.add_argument("--q", type=float, default=None, help="报童下界分位（默认用 config）")
+    ap.add_argument("--no-floor", action="store_true", help="关闭报童下界")
+    ap.add_argument("--mpc-nscen", type=int, default=None, help="执行层情景数")
+    ap.add_argument("--tag", type=str, default="", help="输出文件名后缀")
     args = ap.parse_args()
+
+    g_floor_q = None if args.no_floor else (args.q if args.q is not None else config.G_FLOOR_Q)
+    mpc_nscen = args.mpc_nscen if args.mpc_nscen is not None else config.MPC_N_SCENARIOS
+    tag = args.tag
+    config.G_FLOOR_Q = g_floor_q
+    config.MPC_N_SCENARIOS = mpc_nscen
 
     days = config.N_DAYS if args.days is None else args.days
     configs = [
@@ -59,7 +75,7 @@ def main():
             ("4-2_perfect_PI2", [0], "perfect", False, None),
             ("4-3_perfect_PI3", [0, 1, 2, 3], "perfect", True, None),
         ]
-    specs = [(n, us, info, has_adj, out, args.seed, days)
+    specs = [(n, us, info, has_adj, out, args.seed, days, g_floor_q, mpc_nscen, tag)
              for n, us, info, has_adj, out in configs]
 
     jobs = args.jobs or min(4, len(specs))
@@ -77,10 +93,9 @@ def main():
         results["info_value_4-3"] = round(
             results["4-3_causal_C3"]["cost_total"] - results["4-3_perfect_PI3"]["cost_total"], 2)
 
-    import json
-    with open(config.OUTPUT_DIR / "summary_problem4.json", "w", encoding="utf-8") as f:
+    with open(config.OUTPUT_DIR / f"summary_problem4{tag}.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2, default=str)
-    print(f"\n已写出 summary：{config.OUTPUT_DIR / 'summary_problem4.json'}")
+    print(f"\n已写出 summary：{config.OUTPUT_DIR / f'summary_problem4{tag}.json'}")
 
 
 if __name__ == "__main__":

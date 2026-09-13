@@ -53,11 +53,12 @@ class RollingController:
         if week == self._term_week:
             return self._term_cache
         started = time.perf_counter()
-        load_next = load_forecast(self.load_actual, self.load_mean, d + 1, 0)
+        d_next = min(d + 1, config.N_DAYS - 1)   # 最后一天无次日，用自身（避免越界）
+        load_next = load_forecast(self.load_actual, self.load_mean, d_next, 0)
         pv_mean = config.DT * self._rolling_mean_pv(d)
         if self.varying:
             price_next = price_forecast(self.price_varying, self.price_fixed,
-                                        self.season, d + 1, 0)
+                                        self.season, d_next, 0)
         else:
             price_next = self.price_fixed.copy()
         self._term_cache = compute_terminal_value(load_next, pv_mean, price_next)

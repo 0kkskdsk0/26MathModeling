@@ -1,9 +1,8 @@
 """问题三主运行（并行）：M0/M1/M2/M3 四策略费用对比 + result3.xlsx。
 
-公共初始储能量由 M3 从 1 月 1 日 6000 kWh 暖启动得到（串行）；四种策略从该共同
-状态跑 2 月 1 日至 12 月 31 日（进程级并行）。
-
-用法：python run_problem3.py [--seed 0] [--days N] [--jobs 4] [--q 0.8]
+用法：
+  python -m myh.src.run_problem3 --jobs 4                          # 默认
+  python -m myh.src.run_problem3 --jobs 4 --no-floor --mpc-nscen 50 --tag _nofloor
 """
 import argparse
 import json
@@ -19,7 +18,9 @@ from myh.src.export import write_result
 
 def _run_strategy(spec):
     """单策略完整运行（进程池工作函数，须模块级可 pickle）。"""
-    name, update_set, seed, warm_soc, n_days = spec
+    name, update_set, seed, warm_soc, n_days, g_floor_q, mpc_nscen, tag = spec
+    config.G_FLOOR_Q = g_floor_q
+    config.MPC_N_SCENARIOS = mpc_nscen
     data = get_data()
     ctrl = RollingController(data, update_set, seed=seed)
     ctrl.run_year(n_days=n_days,
@@ -39,7 +40,7 @@ def _run_strategy(spec):
         summ["verify"] = verify(ctrl, data, out_slice=out)
         if n_days == config.N_DAYS:
             write_result(config.TEMPLATE_DIR / "result3.xlsx",
-                         config.OUTPUT_DIR / "result3.xlsx", ctrl, data)
+                         config.OUTPUT_DIR / f"result3{tag}.xlsx", ctrl, data)
     return name, summ
 
 
@@ -48,10 +49,17 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--days", type=int, default=None)
     ap.add_argument("--jobs", type=int, default=None)
-    ap.add_argument("--q", type=float, default=None, help="报童下界分位（None=关闭）")
+    ap.add_argument("--q", type=float, default=None, help="报童下界分位（默认用 config）")
+    ap.add_argument("--no-floor", action="store_true", help="关闭报童下界")
+    ap.add_argument("--mpc-nscen", type=int, default=None, help="执行层情景数")
+    ap.add_argument("--tag", type=str, default="", help="输出文件名后缀")
     args = ap.parse_args()
-    if args.q is not None:
-        config.G_FLOOR_Q = args.q
+
+    g_floor_q = None if args.no_floor else (args.q if args.q is not None else config.G_FLOOR_Q)
+    mpc_nscen = args.mpc_nscen if args.mpc_nscen is not None else config.MPC_N_SCENARIOS
+    tag = args.tag
+    config.G_FLOOR_Q = g_floor_q
+    config.MPC_N_SCENARIOS = mpc_nscen
 
     data = get_data()
     n_days = config.N_DAYS if args.days is None else args.days
@@ -66,7 +74,8 @@ def main():
 
     # 2. 四策略并行
     strategies = [("M0", [0]), ("M1", [0, 1]), ("M2", [0, 1, 2]), ("M3", [0, 1, 2, 3])]
-    specs = [(name, us, args.seed, warm_soc, n_days) for name, us in strategies]
+    specs = [(name, us, args.seed, warm_soc, n_days, g_floor_q, mpc_nscen, tag)
+             for name, us in strategies]
     jobs = args.jobs or min(4, len(specs))
 
     results = {}
@@ -91,9 +100,9 @@ def main():
               f"费用复算残差={v['cost_res']:.2e}  SOC违规={v['soc_viol']}  "
               f"同时充放电={v['simultaneous_cd']} 紧急购电充电={v['emergency_charge']}")
 
-    with open(config.OUTPUT_DIR / "summary_problem3.json", "w", encoding="utf-8") as f:
+    with open(config.OUTPUT_DIR / f"summary_problem3{tag}.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2, default=str)
-    print(f"\n已写出 summary：{config.OUTPUT_DIR / 'summary_problem3.json'}")
+    print(f"\n已写出 summary：{config.OUTPUT_DIR / f'summary_problem3{tag}.json'}")
 
 
 if __name__ == "__main__":

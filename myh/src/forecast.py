@@ -108,7 +108,7 @@ def price_forecast(price_varying, price_fixed, season, d, t0):
         lo = max(0, t0 - 36)
         z = price_varying[d, lo:t0] - m[lo:t0] - gamma[lo:t0]
         delta = float(np.median(z))
-        if d >= 7:
+        if d > 7:
             z_all = np.concatenate([
                 price_varying[j] - price_varying[j - 7] for j in range(7, d)
             ])
