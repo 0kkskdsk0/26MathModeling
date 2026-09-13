@@ -60,3 +60,9 @@ USE_TERMINAL_VALUE = True
 TERM_GRID_STEP = 600.0
 TERM_GRID = [S_MIN + i * TERM_GRID_STEP for i in range(17)]
 TERM_END_SOC = 6000.0
+
+
+def output_tag():
+    """按当前配置自动生成输出文件名后缀，如 _floor0.8_mpc5 或 _nofloor_mpc50。"""
+    floor = "nofloor" if G_FLOOR_Q is None else f"floor{G_FLOOR_Q}"
+    return f"_{floor}_mpc{MPC_N_SCENARIOS}"

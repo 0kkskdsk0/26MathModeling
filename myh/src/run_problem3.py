@@ -52,14 +52,14 @@ def main():
     ap.add_argument("--q", type=float, default=None, help="报童下界分位（默认用 config）")
     ap.add_argument("--no-floor", action="store_true", help="关闭报童下界")
     ap.add_argument("--mpc-nscen", type=int, default=None, help="执行层情景数")
-    ap.add_argument("--tag", type=str, default="", help="输出文件名后缀")
+    ap.add_argument("--tag", type=str, default=None, help="输出文件名后缀（默认按配置自动生成）")
     args = ap.parse_args()
 
     g_floor_q = None if args.no_floor else (args.q if args.q is not None else config.G_FLOOR_Q)
     mpc_nscen = args.mpc_nscen if args.mpc_nscen is not None else config.MPC_N_SCENARIOS
-    tag = args.tag
     config.G_FLOOR_Q = g_floor_q
     config.MPC_N_SCENARIOS = mpc_nscen
+    tag = args.tag if args.tag is not None else config.output_tag()
 
     data = get_data()
     n_days = config.N_DAYS if args.days is None else args.days
