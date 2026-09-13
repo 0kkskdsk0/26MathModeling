@@ -1,0 +1,268 @@
+{
+  "checks": {
+    "result3_floor0.8_mpc5.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -0.0031060001347213984,
+      "xlsx_emergency_minus_json_kwh": 0.001056000000971835,
+      "max_daily_soc_recurrence_residual_kwh": 2.9888860808569007e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10800.0,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result4-2_floor0.8_mpc5.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -0.004681002348661423,
+      "xlsx_emergency_minus_json_kwh": -0.0017769999976735562,
+      "max_daily_soc_recurrence_residual_kwh": 3.222223313059658e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10800.0,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result4-3_floor0.8_mpc5.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": 4.3000560253858566e-05,
+      "xlsx_emergency_minus_json_kwh": -0.0035429999988991767,
+      "max_daily_soc_recurrence_residual_kwh": 4.011109922430478e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10800.0,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result3_nofloor_mpc50.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -0.004402999999001622,
+      "xlsx_emergency_minus_json_kwh": 0.0020289999956730753,
+      "max_daily_soc_recurrence_residual_kwh": 3.3222222555195913e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10800.0,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result4-2_nofloor_mpc50.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -0.0016109999269247055,
+      "xlsx_emergency_minus_json_kwh": 0.004412000009324402,
+      "max_daily_soc_recurrence_residual_kwh": 3.144450602121651e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10800.0,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result4-3_nofloor_mpc50.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -4.0001352317631245e-05,
+      "xlsx_emergency_minus_json_kwh": 0.001631999999517575,
+      "max_daily_soc_recurrence_residual_kwh": 3.0777737265452743e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10540.604486,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result3_nofloor_mpc5.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": 0.001238001394085586,
+      "xlsx_emergency_minus_json_kwh": 0.00038400001358240843,
+      "max_daily_soc_recurrence_residual_kwh": 3.888890205416828e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1368.362444,
+      "max_boundary_soc_kwh": 10800.0,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result4-2_nofloor_mpc5.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -0.0029329992830753326,
+      "xlsx_emergency_minus_json_kwh": 0.0035000001080334187,
+      "max_daily_soc_recurrence_residual_kwh": 3.166660462738946e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1260.276361,
+      "max_boundary_soc_kwh": 10532.073243,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    },
+    "result4-3_nofloor_mpc5.xlsx": {
+      "days": 334,
+      "start": "2025-02-01",
+      "end": "2025-12-31",
+      "xlsx_regular_adjust_minus_json_yuan": -0.0050509999273344874,
+      "xlsx_emergency_minus_json_kwh": -0.003425000002607703,
+      "max_daily_soc_recurrence_residual_kwh": 3.377772372914478e-06,
+      "max_crossday_soc_residual_kwh": 0.0,
+      "min_boundary_soc_kwh": 1200.0,
+      "max_boundary_soc_kwh": 10585.876663,
+      "template_first_time_header": "0:10-0:20",
+      "template_last_time_header": "0:00-0:10+1",
+      "plot_time_rule": "Column 2 is t=1, 00:00-00:10, per export._fill_grid and notation.md; template labels have +10min offset."
+    }
+  },
+  "sources": [
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\summary_problem3_floor0.8_mpc5.json",
+      "sha256": "b52b969f87da1245cb9db57be7d6224a3ac5f42b7758b71f767fc871e5dafabb"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\summary_problem4_floor0.8_mpc5.json",
+      "sha256": "21494f782d26899cab9b401b7a5f3830881f19dd3eb32dd779c5a86dd883b384"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result3_floor0.8_mpc5.xlsx",
+      "sha256": "2f9c808d833b93ed497e10b49a04c17d66143cae8a465010cfa7a37f0f520d49"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result4-2_floor0.8_mpc5.xlsx",
+      "sha256": "a0394f587b7e0718b7520e2f5d298dc246d50aba558c984d84a4b532e19cfcab"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result4-3_floor0.8_mpc5.xlsx",
+      "sha256": "31222da21d7e7395b4ce684a97cfc5b6fea8870d26ee5b5b50ed12700645a893"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\summary_problem3_nofloor_mpc50.json",
+      "sha256": "6a4f8aec0fb725a8f173dc68fcc2a612ed5f0d6b13bc4f42bb26e6bc4e91f8ed"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\summary_problem4_nofloor_mpc50.json",
+      "sha256": "38cb48e99f97c9c5a8649c91b439fe62dd4088ce68075e9eca06416f61a07232"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result3_nofloor_mpc50.xlsx",
+      "sha256": "1b8dbd039b34d9aa109cdedf710907f277bc1cb493ab2f2aeb9a3d4cf97fb826"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result4-2_nofloor_mpc50.xlsx",
+      "sha256": "cb657d9d301f241dd84f67edb9d1d96b20984d58295f6b864d5caa160446bfa0"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result4-3_nofloor_mpc50.xlsx",
+      "sha256": "882258b58ee9f5ff585525fe39d61223f8ae5249d02a975e5df0ee352cc1922c"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\summary_problem3_nofloor_mpc5.json",
+      "sha256": "e6dbb95d01e49c235f72dd8d77d4a2138e2ee56a313a456eafd00290447de4e2"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\summary_problem4_nofloor_mpc5.json",
+      "sha256": "b09e1169752739ca23b70dba40fa50a25be3fcbaa2ddc4bb355d2a865b61c2f3"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result3_nofloor_mpc5.xlsx",
+      "sha256": "dc3682fb5cdb268ac234bddb3773b5cc53492b4c47f432dc6f57c291177d45ea"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result4-2_nofloor_mpc5.xlsx",
+      "sha256": "d7e24d381d74fc3eac6897f498b467e053c3e2c7b65830917d7a1c4014479a0d"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\output\\result4-3_nofloor_mpc5.xlsx",
+      "sha256": "96d8be6f195c432d85ebc9f59d4dd526114ecde94b3a166d1b404e53f95b291e"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\doc\\problem3_solving_final.md",
+      "sha256": "8dfa4e0be07046d1562ed39c27bc7dc6f84822621182106fcbd43f8847726de3"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\doc\\problem4_final.md",
+      "sha256": "0bb5c7eade985d8d7fda04311d11540357601961a6e9c2fadc3e6bea2155df98"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\doc\\notation.md",
+      "sha256": "330ae30bdd22ea912bd7bc4e612f514174b82a007b3d79580f821ab900e49d84"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\myh\\src\\export.py",
+      "sha256": "6c7f2b411bb9b422a8c12f692108d5ba64058175cc532bbc3d01425eaab18480"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\问题1\\plot_q1.py",
+      "sha256": "899158757817c9700ae488eb950f1378caf62c074414dbae914e4be4cb6689b9"
+    },
+    {
+      "path": "D:\\myh\\大学\\2026数模国赛\\26MathModeling\\问题1\\paper\\问题1_论文初稿.md",
+      "sha256": "6c98a0455dca62f642aea6f67ea21a9a9c2320e395d808fbc4e3681c4fb0c30e"
+    }
+  ],
+  "layout_checks": {
+    "01_q3_cost": {
+      "annotation_count": 18,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "02_q3_update_value": {
+      "annotation_count": 15,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "03_q4_price_information": {
+      "annotation_count": 17,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "04_q3_configuration_comparison": {
+      "annotation_count": 9,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "05_monthly_operation": {
+      "annotation_count": 5,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "06_storage_operation": {
+      "annotation_count": 5,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "07_purchase_adjustment": {
+      "annotation_count": 5,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    },
+    "08_emergency_distribution": {
+      "annotation_count": 11,
+      "overlap_check": "PASS",
+      "body_protection_check": "PASS"
+    }
+  },
+  "user_style_override": "用户明确要求主标题、小标题和标注，覆盖技能的无标题默认规则；保留其他设计检查。",
+  "heatmap_abs_color_limit_kwh": 449.6296569677419,
+  "heatmap_clipping": false,
+  "heatmap_aggregation": "Arithmetic mean across all days in each month; no smoothing.",
+  "font": "SimSun",
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "figures": 8,
+  "workbooks": 9,
+  "scope": "6 JSON summaries + 9 workbooks; saved outputs only; no reoptimization",
+  "source_hashes_unchanged": true
+}

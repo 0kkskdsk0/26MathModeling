@@ -1,0 +1,42 @@
+{
+  "01_q3_cost": {
+    "annotation_count": 15,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "02_q3_update_value": {
+    "annotation_count": 12,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "03_q4_price_information": {
+    "annotation_count": 14,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "04_q3_configuration_comparison": {
+    "annotation_count": 6,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "05_monthly_operation": {
+    "annotation_count": 2,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "06_storage_operation": {
+    "annotation_count": 2,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "07_purchase_adjustment": {
+    "annotation_count": 2,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  },
+  "08_emergency_distribution": {
+    "annotation_count": 2,
+    "overlap_check": "PASS",
+    "body_protection_check": "PASS"
+  }
+}

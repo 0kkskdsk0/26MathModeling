@@ -1,0 +1,41 @@
+{
+  "size_inches": [
+    9,
+    9.700000000000001
+  ],
+  "annotations": [
+    {
+      "text": "(a) 月均日常规购电及调整费用",
+      "x": 0.12,
+      "y": 0.8721649484536083,
+      "fontsize": 11,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "(b) 月均日紧急购电量",
+      "x": 0.12,
+      "y": 0.4262886597938145,
+      "fontsize": 11,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    }
+  ],
+  "protected_rectangles": [
+    [
+      0.5568364197530863,
+      0.8688600730240551,
+      0.9538271604938271,
+      0.898396334478809
+    ]
+  ],
+  "instructions": "独立后期标注层。x/y 为从画布左下角起算的归一化坐标；修改后单独运行 compose_annotations.py。"
+}

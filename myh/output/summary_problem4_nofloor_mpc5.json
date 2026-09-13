@@ -1,0 +1,63 @@
+{
+  "4-2_causal_C2": {
+    "update_set": [
+      0
+    ],
+    "price_info": "causal",
+    "cost_normal": 13999058.87,
+    "cost_adjust": 0.0,
+    "cost_emergency": 3105639.03,
+    "cost_total": 17104697.9,
+    "emergency_kwh": 567133.21
+  },
+  "4-3_causal_C3": {
+    "update_set": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "price_info": "causal",
+    "cost_normal": 14231709.92,
+    "cost_adjust": 693134.16,
+    "cost_emergency": 1363567.7,
+    "cost_total": 16288411.77,
+    "emergency_kwh": 258399.36,
+    "verify": {
+      "max_bal": 2.9558577807620168e-12,
+      "max_soc": 9.094947017729282e-13,
+      "cost_res": 0.0,
+      "soc_viol": 0,
+      "rate_viol": 0,
+      "simultaneous_cd": 0,
+      "emergency_charge": 0
+    }
+  },
+  "4-2_perfect_PI2": {
+    "update_set": [
+      0
+    ],
+    "price_info": "perfect",
+    "cost_normal": 13754119.0,
+    "cost_adjust": 0.0,
+    "cost_emergency": 3306561.78,
+    "cost_total": 17060680.78,
+    "emergency_kwh": 596602.42
+  },
+  "4-3_perfect_PI3": {
+    "update_set": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "price_info": "perfect",
+    "cost_normal": 14044471.24,
+    "cost_adjust": 681664.86,
+    "cost_emergency": 1421261.31,
+    "cost_total": 16147397.41,
+    "emergency_kwh": 272837.76
+  },
+  "info_value_4-2": 44017.12,
+  "info_value_4-3": 141014.36
+}

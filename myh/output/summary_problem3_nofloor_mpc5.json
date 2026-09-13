@@ -1,0 +1,62 @@
+{
+  "M0": {
+    "update_set": [
+      0
+    ],
+    "cost_normal": 13170532.72,
+    "cost_adjust": 0.0,
+    "cost_emergency": 3504446.96,
+    "cost_total": 16674979.68,
+    "emergency_kwh": 625327.62
+  },
+  "M1": {
+    "update_set": [
+      0,
+      1
+    ],
+    "cost_normal": 13610708.93,
+    "cost_adjust": 515240.06,
+    "cost_emergency": 2692037.26,
+    "cost_total": 16817986.25,
+    "emergency_kwh": 459920.67
+  },
+  "M2": {
+    "update_set": [
+      0,
+      1,
+      2
+    ],
+    "cost_normal": 13457791.08,
+    "cost_adjust": 517701.17,
+    "cost_emergency": 2466474.56,
+    "cost_total": 16441966.81,
+    "emergency_kwh": 438135.48
+  },
+  "M3": {
+    "update_set": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cost_normal": 13557168.92,
+    "cost_adjust": 698823.92,
+    "cost_emergency": 1454537.41,
+    "cost_total": 15710530.25,
+    "emergency_kwh": 278769.04,
+    "verify": {
+      "max_bal": 1.5916157281026244e-11,
+      "max_soc": 9.094947017729282e-13,
+      "cost_res": 0.0,
+      "soc_viol": 0,
+      "rate_viol": 0,
+      "simultaneous_cd": 0,
+      "emergency_charge": 0
+    }
+  },
+  "deltas": {
+    "dC6": -143006.57,
+    "dC12": 376019.44,
+    "dC18": 731436.56
+  }
+}

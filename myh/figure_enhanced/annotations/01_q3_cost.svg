@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="648pt" height="885.6pt" viewBox="0 0 648 885.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-13T12:42:56.810784</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.8.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 885.6 
+L 648 885.6 
+L 648 0 
+L 0 0 
+L 0 885.6 
+z
+" style="fill: none"/>
+  </g>
+  <g id="text_1">
+   <text style="font: 11px 'Times New Roman', 'SimSun'; text-anchor: start" x="84.24" y="86.927031" transform="rotate(-0 84.24 86.927031)">(a) 配置 A：报童下界 0.8；MPC 5 情景</text>
+  </g>
+  <g id="text_2">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="147.314213" y="157.557112" transform="rotate(-0 147.314213 157.557112)">1,795.6</text>
+  </g>
+  <g id="text_3">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="286.704738" y="149.380853" transform="rotate(-0 286.704738 149.380853)">1,908.1</text>
+  </g>
+  <g id="text_4">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="426.095262" y="151.253196" transform="rotate(-0 426.095262 151.253196)">1,882.4</text>
+  </g>
+  <g id="text_5">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="565.485787" y="151.596252" transform="rotate(-0 565.485787 151.596252)">1,877.6</text>
+  </g>
+  <g id="text_6">
+   <text style="font: 11px 'Times New Roman', 'SimSun'; text-anchor: start" x="84.24" y="356.927031" transform="rotate(-0 84.24 356.927031)">(b) 配置 B：无报童下界；MPC 50 情景</text>
+  </g>
+  <g id="text_7">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="147.314213" y="452.486642" transform="rotate(-0 147.314213 452.486642)">1,452.5</text>
+  </g>
+  <g id="text_8">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="286.704738" y="450.656296" transform="rotate(-0 286.704738 450.656296)">1,477.7</text>
+  </g>
+  <g id="text_9">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="426.095262" y="451.237855" transform="rotate(-0 426.095262 451.237855)">1,469.7</text>
+  </g>
+  <g id="text_10">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="565.485787" y="451.527698" transform="rotate(-0 565.485787 451.527698)">1,465.7</text>
+  </g>
+  <g id="text_11">
+   <text style="font: 11px 'Times New Roman', 'SimSun'; text-anchor: start" x="84.24" y="626.927031" transform="rotate(-0 84.24 626.927031)">(c) 配置 C：无报童下界；MPC 5 情景</text>
+  </g>
+  <g id="text_12">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="147.314213" y="706.865122" transform="rotate(-0 147.314213 706.865122)">1,667.5</text>
+  </g>
+  <g id="text_13">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="286.704738" y="705.826028" transform="rotate(-0 286.704738 705.826028)">1,681.8</text>
+  </g>
+  <g id="text_14">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="426.095262" y="708.558206" transform="rotate(-0 426.095262 708.558206)">1,644.2</text>
+  </g>
+  <g id="text_15">
+   <text style="font: 10px 'Times New Roman', 'SimSun'; text-anchor: middle" x="565.485787" y="713.872864" transform="rotate(-0 565.485787 713.872864)">1,571.1</text>
+  </g>
+ </g>
+</svg>

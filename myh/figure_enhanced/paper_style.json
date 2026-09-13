@@ -1,0 +1,20 @@
+{
+  "titles": {
+    "01_q3_cost": "不同更新策略下的购电费用构成",
+    "02_q3_update_value": "新增更新时刻的边际收益",
+    "03_q4_price_information": "不同价格信息下的结算费用比较",
+    "04_q3_configuration_comparison": "报童下界与 MPC 情景数的影响",
+    "05_monthly_operation": "购电费用与紧急购电量的月度变化",
+    "06_storage_operation": "储能充放电特征与日末储能分布",
+    "07_purchase_adjustment": "购电计划调整量的月度时段分布",
+    "08_emergency_distribution": "不同配置下的日紧急购电量分布"
+  },
+  "panels": {
+    "03_q4_price_information": ["(a) 因果预测与完美价格信息下的结算费用", "(b) 价格信息的费用节省"],
+    "04_q3_configuration_comparison": ["(a) 相对配置 C 的结算费用变化", "(b) 相对配置 C 的紧急购电量变化"],
+    "05_monthly_operation": ["(a) 月均日常规购电及调整费用", "(b) 月均日紧急购电量"],
+    "06_storage_operation": ["(a) 分时段平均充放电量", "(b) 日末储能量的经验分布"],
+    "07_purchase_adjustment": ["(a) 问题三 M3", "(b) 问题四 C3"],
+    "08_emergency_distribution": ["(a) 问题三 M3", "(b) 问题四 C3"]
+  }
+}

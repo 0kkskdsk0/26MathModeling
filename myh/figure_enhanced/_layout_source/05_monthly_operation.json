@@ -1,0 +1,77 @@
+{
+  "size_inches": [
+    9,
+    10.3
+  ],
+  "annotations": [
+    {
+      "text": "月度运行｜购电费用与紧急购电需求",
+      "x": 0.07,
+      "y": 0.966990291262136,
+      "fontsize": 19.0,
+      "color": "#334A5E",
+      "weight": "bold",
+      "ha": "left",
+      "va": "top",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "2025.02.01—12.31 · 334 天实际回测输出；配置 B：无报童下界、MPC50",
+      "x": 0.07,
+      "y": 0.9145631067961166,
+      "fontsize": 10.5,
+      "color": "#68737D",
+      "weight": "normal",
+      "ha": "left",
+      "va": "top",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "每月按实际输出天数取日均，包含无紧急购电的日期。\n上图不含紧急购电费，不能解释为每日总费用。",
+      "x": 0.07,
+      "y": 0.04660194174757281,
+      "fontsize": 9.0,
+      "color": "#68737D",
+      "weight": "normal",
+      "ha": "left",
+      "va": "top",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "(a) 月均日常规购电及调整费用",
+      "x": 0.12,
+      "y": 0.845631067961165,
+      "fontsize": 12.0,
+      "color": "#334A5E",
+      "weight": "bold",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "(b) 月均日紧急购电量",
+      "x": 0.12,
+      "y": 0.42572815533980585,
+      "fontsize": 12.0,
+      "color": "#334A5E",
+      "weight": "bold",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    }
+  ],
+  "protected_rectangles": [
+    [
+      0.5568364197530863,
+      0.8425187095469256,
+      0.9538271604938271,
+      0.8703344120819851
+    ]
+  ],
+  "instructions": "独立后期标注层。x/y 为从画布左下角起算的归一化坐标；修改后单独运行 compose_annotations.py。"
+}

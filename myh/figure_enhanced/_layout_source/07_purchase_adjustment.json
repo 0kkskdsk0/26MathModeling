@@ -1,0 +1,83 @@
+{
+  "size_inches": [
+    9,
+    10.3
+  ],
+  "annotations": [
+    {
+      "text": "计划调整｜月均日内增购与减购分布",
+      "x": 0.07,
+      "y": 0.966990291262136,
+      "fontsize": 19.0,
+      "color": "#334A5E",
+      "weight": "bold",
+      "ha": "left",
+      "va": "top",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "2025.02.01—12.31 · 334 天实际回测输出；配置 B：无报童下界、MPC50",
+      "x": 0.07,
+      "y": 0.9145631067961166,
+      "fontsize": 10.5,
+      "color": "#68737D",
+      "weight": "normal",
+      "ha": "left",
+      "va": "top",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "调整量 = 最终生效计划 − 0:00 原计划；红色增购、蓝色减购。\n共享对称色标，完整覆盖数据；竖线标记 6:00、12:00、18:00 更新时刻。",
+      "x": 0.07,
+      "y": 0.04660194174757281,
+      "fontsize": 9.0,
+      "color": "#68737D",
+      "weight": "normal",
+      "ha": "left",
+      "va": "top",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "(a) 问题三 M3：固定电价",
+      "x": 0.12,
+      "y": 0.845631067961165,
+      "fontsize": 12.0,
+      "color": "#334A5E",
+      "weight": "bold",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "(b) 问题四 C3：波动电价",
+      "x": 0.12,
+      "y": 0.42572815533980585,
+      "fontsize": 12.0,
+      "color": "#334A5E",
+      "weight": "bold",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    }
+  ],
+  "protected_rectangles": [
+    [
+      0.12,
+      0.5121359223300971,
+      0.86,
+      0.7815533980582524
+    ],
+    [
+      0.12,
+      0.09223300970873788,
+      0.86,
+      0.3616504854368932
+    ]
+  ],
+  "instructions": "独立后期标注层。x/y 为从画布左下角起算的归一化坐标；修改后单独运行 compose_annotations.py。"
+}

@@ -1,0 +1,48 @@
+% Requires array, booktabs and tabularx (included in cumcm2026).
+\section{符号说明}
+\label{sec:symbols}
+
+\begingroup
+\centering
+\linespread{1}\selectfont
+\fontsize{10.5pt}{13.5pt}\selectfont
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+\noindent
+\begin{tabularx}{\linewidth}{@{}
+  >{\centering\arraybackslash}m{0.18\linewidth}
+  >{\centering\arraybackslash}X|
+  >{\centering\arraybackslash}m{0.18\linewidth}
+  >{\centering\arraybackslash}X@{}}
+\toprule[0.8pt]
+符号 & 意义 & 符号 & 意义 \\
+\midrule[0.5pt]
+$t,\mathcal T$ & 十分钟时段索引及集合；$t=1,\ldots,144$ & $d,\mathcal D$ & 日期索引及数据日期集；2025 年的 365 个日期 \\
+$\Delta$ & 单时段长度；$1/6$ & $\mathcal D_{\mathrm{out}}$ & 输出日期集；2025-02-01 至 12-31，共 334 个日期 \\
+$P_t$ & 问题一至三固定购电价格 & $k$ & 预报发布阶段；0、1、2、3 对应 0、6、12、18 时 \\
+$\ell_t$ & 典型日负载功率 & $\omega,\Omega_d$ & 情景索引及目标日情景集合（按日构造） \\
+$P_t^{\mathrm{PV}}$ & 典型日光伏预测功率 & $\mathcal H_d$ & 目标日的候选历史日集合 \\
+$L_t,L_{d,t}$ & 典型日、实际逐日负载电量 & $\pi_{d,\omega}$,\newline $\pi_{d,k,\omega}$ & 日计划、更新阶段的情景权重；非负且和为 1 \\
+$R_t,R_{d,t}$ & 典型日、实际逐日可用光伏电量 & $L^\omega_{d,t}$,\newline $L^\omega_{d,k,t}$ & 日计划、更新阶段的负载情景电量 \\
+$N_t$ & 典型日净负荷电量；$L_t-R_t$ & $R^\omega_{d,t}$,\newline $R^\omega_{d,k,t}$ & 日计划、更新阶段的光伏情景电量 \\
+$G_t,G_{d,t}$ & 典型日、逐日计划购电量 & $N^\omega_{d,k,t}$ & 更新阶段情景净负荷电量；情景负载减光伏 \\
+$C_t,C^\omega_{d,t}$ & 交流母线侧充电量及其情景值 & $\widehat L_{d,k,t}$ & 阶段 $k$ 对时段 $t$ 的负载电量预测 \\
+$D_t,D^\omega_{d,t}$ & 交流母线侧放电量及其情景值 & $\widehat R_{d,k,t}$ & 阶段 $k$ 对时段 $t$ 的光伏电量预测 \\
+$E_t,E^\omega_{d,t}$ & 紧急购电量及其情景值；按交易价 5 倍结算 & $G^{\mathrm c}_{d,t}$ & 计划购电中划给储能充电的份额 \\
+$S_t,S^\omega_{d,t}$ & 时段开始时储电量及其情景值 & $\Delta_{d,t}$ & 情景加权的正净负荷缺口 \\
+$W_t^{\mathrm{PV}}$ & 纯光伏弃光电量 & $G^{(0)}_{d,t}$ & 0:00 制定的原计划购电量 \\
+$W_t,W^\omega_{d,t}$ & 合并弃置电量，含弃光与已购未利用 & $G^{(k)}_{d,t}$ & 阶段 $k$ 更新后的总购电量，非增量 \\
+$\mathcal T^+$ & 储能状态端点集；$\{1,\ldots,145\}$ & $G^F_{d,t}$ & 交割前最终生效的购电量 \\
+$S^{\min},S^{\max}$ & 储电量安全下限、上限；1200、10800 & $A^{(k)}_{d,t}$ & 阶段 $k$ 计划相对原计划的绝对调整量 \\
+$\bar e$ & 单时段最大充电或放电量；约 833.33 & $\theta^\omega_{d,k}$ & 情景日末储能的未来费用代理 \\
+$\eta,\eta_c,\eta_d$ & 单程充、放电效率；主口径均为 0.9 & $P_{d,t}$ & 问题四实际波动电价 \\
+$J$ & 问题一全天购电费用 & $\widehat P_{d,t}$ & 电价点预测 \\
+$C_{\mathrm{official}}$ & 输出期官方结算费用 & $P^\omega_{d,t}$ & 情景电价 \\
+$m^p_{d,t}$ & 电价周同期基线 & $\bar P^{\mathrm{seas}}_{d,t}$ & 同季节历史日平均电价 \\
+$\gamma^p_{d,t}$ & 同星期日内价格时段效应，零和 & $\delta^p_{d,r}$ & 实时位置 $r$ 的电价水平修正 \\
+$\varepsilon^p_{j,t}$ & 历史日电价预测残差 &  &  \\
+\bottomrule[0.8pt]
+\end{tabularx}
+\par
+\endgroup

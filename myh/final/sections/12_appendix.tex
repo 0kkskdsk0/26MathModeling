@@ -1,0 +1,1534 @@
+\newpage
+\begin{appendices}
+
+\renewcommand{\thesection}{附录\Alph{section}}
+\renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}
+\renewcommand{\lstlistingname}{代码}
+
+% =====================================================================
+% 第一部分：支撑材料的项目架构
+% =====================================================================
+\section*{支撑材料的项目架构}
+
+支撑材料包含：按题目要求上传的各result文件，按小问划分的三个相互独立的求解工程，另附一份 AI 工具使用情况说明。\texttt{Q1求解} 处理典型日的购电与储能联合调度，输入附件 1，产出调度明细、结果表与四组图件，并以 Markdown 给出该问的章节初稿。\texttt{Q2求解} 采用同一套“输入数据—求解代码—数值产物—图件”的四层结构：根目录放统一符号设定与研究日志，\texttt{solving/} 下按核赋权原型、近视基线定稿、远视化配对对照三个阶段各自成包，\texttt{outputs/} 与 \texttt{assets/} 分别存放三个阶段的结果与图件，\texttt{doc/}、\texttt{task/} 与 \texttt{utils/} 收录数据探索记录、任务书与辅助代码。\texttt{Q3,Q4求解} 以模块化包结构实现滚动决策与波动电价下的重算，代码、建模文档与结果表分别放在 \texttt{src/}、\texttt{doc/} 与 \texttt{output/}。三个工程都只依赖题目附件，可分别独立运行与复现，论文正文中的每一项数值都能在对应工程的输出目录中找到落盘文件。
+
+\section*{跨日近视假设的论证史与实验证据}
+
+本附录是问题二正文的配套材料，承载正文因篇幅与叙事纪律而压缩的全部论证过程、模型构造细节与实验数据。正文与附录的引用关系见表~\ref{tab:appendix-index}，每一处正文引用都能在本附录中找到对应章节。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{正文引用与附录章节的对应关系}
+  \label{tab:appendix-index}
+  \begin{tabularx}{\textwidth}{@{}p{3.1cm} L p{2.6cm}@{}}
+    \toprule
+    正文位置 & 正文中的表述 & 附录对应章节 \\
+    \midrule
+    问题分析·一个假设与一个挑战 & 口头论证的命题链在当前模型族内不可检验，详见附录 A & 附录 A 与附录 B \\
+    模型建立·跨日近视假设的检验设计 & 完整的论证史、模型构造细节与全部实验数据见附录 A 至附录 C & 附录 A、附录 B、附录 C \\
+    数据预处理·特征筛选 & 事后候选的标注与证据强度说明见附录 D & 附录 D \\
+    敏感性分析·核加权方案与带宽 & 带宽搜索过程与三套方案对比 & 附录 D \\
+    模型验证·一处需要如实记录的模型性质 & 弃置电量的成因与量级 & 附录 A 第三节与附录 C 第五节 \\
+    结论·跨日近视假设的检验结论 & 配对数据、负结果的传导机制与适用边界 & 附录 C \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+本附录中标注为远视侧的全部数值均取自 \texttt{outputs/\allowbreak taskCompositeFar/}，标注为近视侧的全部数值均取自 \texttt{outputs/\allowbreak taskComposite/}，不含任何未落盘的中间量。每条结论后面均标注对应的输出文件路径，可逐项复算。
+
+\section{跨日近视假设的论证史}
+
+\subsection{原口头论证与其命题链}
+
+跨日近视假设在建模初期的支持依据是一段口头论证，其核心判断是日末储能的边际价值被封顶在次日凌晨的低谷电价附近。该论证给出的理由有三条：电价低谷恰好横跨日界，22:00 至次日 5:00 的购电价格在 0.42 元/kWh 附近；凌晨可以重新购入电量，储能充满 9600 kWh 可用容量只需约 12 个时段，替代供给在功率侧充足；凌晨净负荷日均 17,476.5 kWh，远超 9600 kWh 的可用容量，替代供给在电量侧同样充足。由此推出两端电价几乎相等，最优解处于放掉与留下近乎无差异的临界，两个模型的日末行为趋于一致，跨日近视假设可以接受。
+
+把这段论证重写为可逐条判定的命题链，可得到七条命题。命题的检验状态如表~\ref{tab:appendix-propositions}，逐条复算的完整数值见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak assumption\_audit.md} 与 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak assumption\_audit.json}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{跨日近视口头论证的命题链与检验状态}
+  \label{tab:appendix-propositions}
+  \begin{tabularx}{\textwidth}{@{}c L c@{}}
+    \toprule
+    编号 & 命题 & 检验状态 \\
+    \midrule
+    P1 & 近视模型在 22:00---24:00 的低谷窗口把储能放空 & 既有数据支持 \\
+    P2 & 假设成立的充分条件为 $\max_{q}(-a_{d,q})\lesssim\min_{t\in\mathcal{T}^{\text{晚}}}P_t$ & 不可检验 \\
+    P3 & 日末储能的边际价值被封顶在凌晨低谷价约 0.42 元/kWh 附近 & 不可检验 \\
+    P4 & 附件 1 在 22:00---24:00 的电价为 0.418---0.427 元/kWh & 既有数据与预期不符 \\
+    P5 & 两端几乎相等推出两模型日末行为趋于一致，进而接受跨日近视假设 & 不可检验 \\
+    P6 & 计划购电直达负载且无功率上限，凌晨空仓只影响套利机会而不阻塞供电 & 既有数据与预期不符 \\
+    P7 & 凌晨紧急购电是全天最便宜的紧急购电时段，可用计划裕度廉价对冲 & 既有数据支持 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{命题链的逐条复算}
+
+\textbf{P1 检验状态为既有数据支持。} 日末储电量恒为下限的天数为 334/334，总体标准差为 0.000000 kWh；晚高峰 22:00---24:00 的放电总量为 47,079.635282 kWh、充电总量为 20,182.174002 kWh。行为描述与观测一致，但该描述只刻画近视模型自身的最优解，不含任何关于远视模型会如何行动的信息。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_year.csv} 的 \texttt{storage\_end} 列与 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_detail.csv}。
+
+\textbf{P2 检验状态为不可检验。} 左端对象是终端价值函数 $V_{d+1}(s)$ 的分段线性下界的切线斜率 $a_{d,q}$，既有产物中记录该量的文件为无，右端即附件 1 晚高峰窗口电价为 0.385900 与 0.436800 元/kWh。$a_{d,q}$ 是远视模型决策约束 $\theta^{\omega}_{d}\ge a_{d,q}S^{\omega}_{d,145}+b_{d,q}$ 的系数；在近视模型族中 $\theta$ 不进入目标函数，没有任何最优性条件涉及 $a_{d,q}$。形式化论证见附录 B。
+
+\textbf{P3 检验状态为不可检验。} 该命题包含事实层与断言层，两者地位不同。事实层可由附件 1 与既有产物完全复算，且复算结果与原论证一致：晚高峰电价区间 0.385900 至 0.436800 元/kWh、均值 0.421533；凌晨 0:00---5:00 电价区间 0.424500 至 0.442200 元/kWh、均值 0.433393；凌晨均价比晚高峰均价高 2.813538\%；凌晨净负荷日均总量 17,476.499469 kWh；次日凌晨净负荷总量低于可用容量 9600 kWh 的天数为 0/333；可用容量 9,600.000000 kWh；充电功率上限 833.333333 kWh/10min；充满可用容量所需时段数 11.520000。断言层即边际价值被封顶在 0.42 附近这一陈述，是关于 $V_{d+1}(s)$ 斜率的陈述，在当前模型族内没有定义，不可检验。复算同时显示两端几乎相等这一判断掩盖了一个方向性不对称：凌晨电价均值反而高于晚高峰均值，且晚高峰窗口内的最低价 0.3859 低于凌晨最低价 0.4245。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak assumption\_audit.md} 与 \texttt{ProblemC/附件/附件1.xlsx}。
+
+\textbf{P4 检验状态为既有数据与预期不符。} 原论证引用的区间为 0.418000 与 0.427000 元/kWh，实际复算的区间为 0.385900 与 0.436800 元/kWh，均值为 0.421533；全天最低电价 0.371300 元/kWh 出现在 5:40；低于 0.418 元/kWh 的晚高峰时段数为 1。原论证引用的下界 0.418 元/kWh 过低，这直接影响两端几乎相等这一判断的分辨率。出处 \texttt{ProblemC/附件/附件1.xlsx}。
+
+\textbf{P5 检验状态为不可检验。} 该推理链的承重点是 P2，而 P2 不可检验，因此推理链在承重处断开。两端几乎相等只是对两个未经独立计算的数字的比较。被跳过的实验是 $V(s)$ 扫描实验。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak assumption\_audit.md}。
+
+\textbf{P6 检验状态为既有数据与预期不符。} 全年弃置电量 3,848,719.116083 kWh，占计划购电比例 17.613740\%，为充电量的 6.165750 倍，出现弃置的天数 333/334；计划购电超出实际净负荷 3,911,474.791157 kWh；净负荷为正时段的弃置电量 855,035.905648 kWh；充电已达功率上限时段的弃置电量 1,172.468069 kWh，充电未达功率上限时段的弃置电量 3,847,546.648014 kWh，后者占弃置总量的 99.969536\%；充电已达功率上限的时段数为 57；储能全天最高储电量在 365 天口径下为 6,609.617145 kWh，距储能上限 10800 kWh 的余量为 4,190.382855 kWh；充电日均利用率占可用容量 9600 kWh 为 0.194676。计划购电直达负载并不成立，因为全年有 17.613740\% 的计划购电量被弃置；这些弃置既不能由充电功率上限解释，也不能由储能容量解释，只能由多余的来源在当天无处可用且在目标函数中不被跨日赋值解释，而后者正是跨日近视假设本身。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_year.csv} 与 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_detail.csv}。
+
+\textbf{P7 检验状态为既有数据支持。} 凌晨 0:00---5:00 的紧急购电量为 16,218.255333 kWh，晚高峰 22:00---24:00 的紧急购电量为 5,006.120080 kWh，凌晨紧急购电占全年比例 29.042016\%，全年紧急购电量 55,844.109499 kWh，出现紧急购电的天数 70/334。既有结果显示凌晨几乎不触发紧急购电，与该命题方向一致，但它同样只说明近视模型的行为，不构成对 P2 左端的支持。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_detail.csv}。
+
+\subsection{与论证预期不符的定量信号}
+
+以下四组信号全部可由 \texttt{outputs/\allowbreak taskComposite/} 的既有文件直接复算。必须先声明的一组不成立的推论是：这些现象并不能证明跨日近视假设为假。它们与近视模型的最优性完全一致，是同一假设的推论而非反驳；用假设的推论去否定假设，与用假设本身支持假设在逻辑上同样无效。这些信号的作用是定位原论证的薄弱环节，并说明 $V(s)$ 扫描检验必须补做。
+
+\textbf{信号一：储能容量与充电功率都不是瓶颈，日末空仓不是约束的强加。} 日末与日初储电量在 334 天全部等于下限 1200 kWh，标准差为 0；储能全天最高在 365 天口径下为 6,609.6171 kWh，距上限 10800 kWh 尚有 4,190.3829 kWh，全年没有任何时段触及上限；全年充电量 624,209.4 kWh，日均 1,868.9 kWh，只占可用容量 9600 kWh 的 19.468\%。这组事实说明日末空仓并非储能装不下，而是目标函数的选择。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_year.csv} 的 \texttt{charge\_kwh}、\texttt{storage\_start}、\texttt{storage\_end} 列与 \texttt{outputs/\allowbreak taskComposite/\allowbreak validation\_daily.csv} 的 \texttt{storage\_max\_kwh} 列。
+
+\textbf{信号二：弃置电量既不能由充电功率上限解释，也不能由储能容量解释。} 全年弃置 3,848,719.1 kWh，占计划购电量的 17.61\%，是全年充电量的 6.166 倍，333/334 天出现弃置；计划购电总量超出实际净负荷 3,911,474.8 kWh，占计划购电量的 17.901\%。约束侧的复算排除两种技术性解释：全年只有 57 个时段即全部 48,096 个时段的 0.1185\% 充电达到功率上限，落在这些时段的弃置仅 1,172.5 kWh，弃置总量的 99.97\% 即 3,847,546.6 kWh 发生在充电未达功率上限的时段；储能全天最高 6,609.6171 kWh，距上限 4,190.3829 kWh，从未触顶。排除这两者后，弃置只能由多余的来源在当天无处可用且在目标函数中不被跨日赋值解释，而后者正是跨日近视假设本身。该信号仍然不是对假设的证伪，因为在近视模型内把无处可用的电量弃置确实是最优的；它的作用是标出假设的代价可能有 17.61\% 的计划购电量级，从而说明扫描检验不可省略。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_year.csv} 与 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_detail.csv}。
+
+\textbf{信号三：原论证的两端几乎相等与电价表的复算结果不符。} 晚高峰 22:00---24:00 的实际电价区间是 0.3859 至 0.4368 元/kWh，均值 0.4215，有 1 个时段低于原论证引用的下界 0.418；凌晨 0:00---5:00 的电价区间是 0.4245 至 0.4422 元/kWh，均值 0.4334，反而高于晚高峰均值 2.81\%；全天最低价 0.3713 元/kWh 出现在 5:40，并不在 22:00---24:00 窗口内。放掉一侧的晚高峰均价 0.4215 比留下后在凌晨使用一侧的凌晨均价 0.4334 更低，两端不是几乎相等，而是存在方向明确、量级约 2\% 至 3\% 的系统性缺口，论证的比较没有考虑这一缺口，也没有考虑储能往返效率 $\eta_c\eta_d=0.81$ 对两侧的不同作用。出处 \texttt{ProblemC/附件/附件1.xlsx}。
+
+\textbf{信号四：晚高峰仍在弃置，而同一时刻日末储能恰好停在下限。} 晚高峰 22:00---24:00 窗口内计划购电 2,299,967.1 kWh、实际净负荷 2,285,454.0 kWh、放电 47,079.6 kWh、充电 20,182.2 kWh，同时弃置 46,416.7 kWh。在这一窗口内储能还有 4,190 kWh 以上的容量余量，日末储电量却精确停在下限。这是手边有容量、有富余来源却既不留也不充的直接痕迹，与论证预期的两个模型在日末趋于一致之间的落差，正是远视化要回答的问题。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak dispatch\_detail.csv}。
+
+\section{充分条件不可检验性的形式化否证}
+
+\subsection{两个目标函数的写法}
+
+记第 $d$ 天的近视目标为
+\begin{equation}
+\min\;\sum_{t\in\mathcal{T}}P_tG_{d,t}+\sum_{\omega\in\Omega_d}\pi_{d,\omega}\sum_{t\in\mathcal{T}}5P_tE^\omega_{d,t}
++\varepsilon\sum_{\omega\in\Omega_d}\pi_{d,\omega}\sum_{t\in\mathcal{T}}\bigl(C^\omega_{d,t}+D^\omega_{d,t}\bigr),
+\end{equation}
+
+远视目标为
+\begin{equation}
+\min\;\sum_{t\in\mathcal{T}}P_tG_{d,t}+\sum_{\omega\in\Omega_d}\pi_{d,\omega}\Bigl(\sum_{t\in\mathcal{T}}5P_tE^\omega_{d,t}+\theta^\omega_d\Bigr),
+\qquad \theta^\omega_d\ge a_{d,q}S^\omega_{d,145}+b_{d,q}.
+\end{equation}
+
+原论证所用的充分条件是
+\begin{equation}
+\max_{q=0,\ldots,Q-1}\bigl(-a_{d,q}\bigr)\;\lesssim\;\min_{t\in\mathcal{T}^{\text{晚}}}P_t,
+\qquad \mathcal{T}^{\text{晚}}=\{133,\ldots,144\},
+\end{equation}
+
+其左端 $-a_{d,q}$ 是终端价值函数 $V_{d+1}(s)$ 的切线斜率。
+
+\subsection{六步论证}
+
+\textbf{第 1 步。} $a_{d,q}$ 只在远视模型中作为决策约束的系数出现。符号表把 $(a_{d,q},b_{d,q})$ 定义为终端价值辅助变量 $\theta^\omega_d$ 的第 $q$ 条切线的斜率与截距，而 $\theta^\omega_d$ 只出现在远视模型的目标函数与支撑约束中。
+
+\textbf{第 2 步。} 近视模型族中 $\theta$ 不进入目标函数，因此没有任何最优性条件涉及 $a_{d,q}$。近视模型的最优解 $(G^*,C^*,D^*,S^*,E^*,W^*)$ 与 $a_{d,q}$ 无关；既有落盘产物中不存在任何记录 $a_{d,q}$ 的文件或列。
+
+\textbf{第 3 步。} 要在近视模型族内给 $-a_{d,q}$ 赋值，唯一可能的取值是 0。若坚持在近视模型内解释 $\theta^\omega_d$，则它不受任何下界约束，又以正权重 $\pi_{d,\omega}$ 进入最小化目标，故 $\theta^\omega_d\equiv0$ 对一切 $\omega$，从而 $a_{d,q}\equiv0$。
+
+\textbf{第 4 步。} 于是充分条件退化为 $0\lesssim0.385900$。右端 $\min_{t\in\mathcal{T}^{\text{晚}}}P_t=0.385900>0$，不等式无条件成立，不依赖任何数据、情景池或权重。
+
+\textbf{第 5 步。} 该条件因此等价于近视模型不为日末储能赋值，即跨日近视假设本身。以假设为前提推出条件、再用条件支持同一假设，构成循环；条件不是对假设的检验，而是对假设的重述。
+
+\textbf{第 6 步。} 要真正计算左端，必须先构造 $V_{d+1}(s)$，而这已经是远视模型。$V_{d+1}(s)$ 定义为次日以储能 $s$ 开局的最小期望费用，其切线斜率必须由远视或至少一步前瞻的模型给出。该条件只有在远视模型已经建好之后才能被检验，它不能用来决定是否需要建远视模型。
+
+\textbf{否证的落点。} 原论证在当前模型族内不可检验，这是否证的结论。否证的对象不是跨日近视近似不准这一数值判断，而是该论证构成对跨日近视假设的检验这一方法论主张。这一结论只依赖模型结构，不依赖具体数据，换一批电价或负载曲线也不会改变。
+
+\subsection{使该条件可检验所需的构造}
+
+要使上述充分条件成为可判定的，需要依次完成三步：显式定义 $V_{d+1}(s)$，包括状态区间上的采样网格、采样点上的值函数与共同出发点约束的次梯度、以及每点一条切线的构造规则；在同一情景池与同一核权重下把切线送入第 $d$ 天的目标函数，得到远视模型；在同一执行层下配对比较 $C_{\mathrm{official}}$，并按事先固定的相对阈值给出采纳判定。这三步构成附录 C 的主体。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak assumption\_audit.md} 与 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak assumption\_audit.json}。
+
+\section{远视模型、配对对照与核验}
+
+\subsection{终端价值函数的构造}
+
+终端价值函数 $V_{d+1}(s)$ 定义为以储能 $s$ 开局、在第 $d$ 天已知的 $(\Omega_d,\pi_{d,\omega})$ 下单日近视问题的最小期望费用。截断口径取一步前瞻加近视尾部，即 $V_{d+1}$ 的尾部仍取近视，不含更远的终端价值，递归不窥见未来；期望用与主模型逐元素一致的同一组 $(\Omega_d,\pi_{d,\omega})$ 估计；次梯度取共同出发点约束 $S^\omega_{d,1}=s$ 的对偶变量之和。终端价值是费用函数，关于开局储电量单调不增且凸，因此 $a_{d,q}\le0$ 且随 $q$ 单调不减。由于 $\theta^\omega_d$ 以正权重 $\pi_{d,\omega}$ 进入最小化目标，线性规划自动取 $\theta^\omega_d=\max_q(a_{d,q}S^\omega_{d,145}+b_{d,q})$，即切线的上包络。由值函数的次梯度性质，每条切线都在 $V_{d+1}$ 下方，包络自下方支撑 $V_{d+1}$，不会高估留电的价值。
+
+全部判据、网格规则与判定阈值在读取任何远视与近视对照结果之前写入 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak frozen\_rule\_far.json}，其中字段 \texttt{pre\_registered\_before\_reading\_results} 标记为真。核心口径为：状态区间 $[S^{\min},S^{\max}]=[1200,10800]$；初始网格 $N_0=5$，轮数上限 $R_{\max}=5$；加密方式为保留已算点的中点二分；每个采样点生成一条切线，不取区间端点中较紧者；切线指纹容差为斜率 $10^{-8}$ 元/kWh、截距 $10^{-6}$ 元；切线集合逐日重算，不沿用前一日的切线；冷启动期 2025-01-01 至 01-31 取 $\theta\equiv0$，以保证 02-01 的日初储电量与近视模型逐元素一致。
+
+\subsection{网格加密与收敛判据}
+
+加密逐轮记录如表~\ref{tab:appendix-grid}，为便于排版，该表以轮次为列、指标为行给出；出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak value\_function\_convergence.md} 与 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak value\_function\_rounds.csv}。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{终端价值函数采样网格的逐轮加密记录}
+  \label{tab:appendix-grid}
+  \begin{tabularx}{\textwidth}{@{}L *{6}{R}@{}}
+    \toprule
+    指标 & 第 0 轮 & 第 1 轮 & 第 2 轮 & 第 3 轮 & 第 4 轮 & 第 5 轮 \\
+    \midrule
+    网格点数 $N_r$ & 5 & 9 & 17 & 33 & 65 & 129 \\
+    网格间距(kWh) & 2,400 & 1,200 & 600 & 300 & 150 & 75 \\
+    到达该轮的天数 & 334 & 334 & 331 & 331 & 331 & 4 \\
+    最大相邻差(元) & 1,148.52 & 574.8 & 287.4 & 143.7 & 71.8502 & 35.4001 \\
+    中位相邻差(元) & 876.359 & 539.39 & 282.126 & 141.5 & 70.7545 & 35.4001 \\
+    包络抬高量最大值(元) & $-1$ & 123.681 & 84.1386 & 40.4151 & 23.6457 & 0.329385 \\
+    新增有效切线(严格集合差) & $-1$ & 4 & 8 & 16 & 32 & 11 \\
+    有效切线数(最大) & 5 & 9 & 17 & 33 & 65 & 34 \\
+    在该轮判收敛的天数 & 0 & 3 & 0 & 0 & 327 & 4 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+第 0 轮的包络抬高量与新增有效切线记为 $-1$，因为该轮没有上一轮可比，不是数值为零。第 $r\ge1$ 轮的两行分别是第 $r$ 轮相对第 $r-1$ 轮的包络抬高量 $\max_s[\hat V_r(s)-\hat V_{r-1}(s)]$ 与严格集合差计数。全年 334 天全部判收敛，实际用到的最多轮数为 6，最大网格点数为 129，收敛轮次的分布为第 1 轮 3 天、第 4 轮 327 天、第 5 轮 4 天，累计求解决策层线性规划 21,798 次，求解器累计耗时 62,451.0 秒，为并行前的单核口径。最终切线集合的每日条数在 5 至 65 条之间，总计 15,612 条，存放于 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak value\_function\_samples.npz} 的 \texttt{tangents} 数组。
+
+\textbf{两条判据的定义。} 判据 A 要求相邻网格点上价值函数估计值之差的最大值不超过 $\eta=150$ 元；判据 B 要求再加密一轮的包络抬高量不超过 $\tau_{\mathrm{env}}=15$ 元。判据 B 的原始表述是再加密一轮不再产生新的有效切线，对严格凸的价值函数，新增采样点的切线一定在该点接触 $V$，因此按集合论意义的严格集合差恒不为零，本批数据中各轮的最大严格新增数为第 1 轮 4 条、第 2 轮 8 条、第 3 轮 16 条、第 4 轮 32 条、第 5 轮 11 条。若照字面执行判据永不成立，只能撞上轮数上限，这会掩盖真实情况。因此把新操作化为该轮新切线是否在容差之外抬高了逼近包络，该量有直接的经济含义，即把网格再加密一轮能给价值函数逼近带来的最大改进。严格的集合差仍逐日如实落盘在 \texttt{value\_function\_rounds.csv} 的 \texttt{new\_effective\_tangents} 列，未被掩盖。
+
+\textbf{阈值的标定依据。} 判据 A 的量纲是相邻网格点上的费用差，把它按日累加得到全年上界 $334\times\eta=334\times150=50{,}100$ 元，占既有近视结果 $C_{\mathrm{official}}=16{,}998{,}506$ 元的 0.295\%，低于事先固定的采纳阈值 0.5\% 即 84,993 元。即便判据 A 的分辨率极限全部转化为同向误差，也不足以把一个达到采纳标准的改善掩盖掉。判据 B 同理，$334\times15=5{,}010$ 元即 0.029\%。阈值不是从对照结果反推的，而是由 \texttt{value\_function.py --calibrate} 在 12 个代表日上跑满轮数上限得到的轨迹确定，记录于 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak value\_function\_calibration.json}。标定轨迹中第 3 轮的 $\max\Delta=142.3003$ 元、第 4 轮的包络抬高量最大值 $=11.8174$ 元，因此 $\eta=150$、$\tau_{\mathrm{env}}=15$ 使网格在第 4 轮即 65 点判定收敛，而更严的取值如 $\eta=100$ 需要第 5 轮即 129 点才能满足判据 A。标定过程只读取近视模型的值函数，不接触任何远视与近视对照结果，对照结果在该文件生成之后才产生。
+
+\textbf{逼近质量。} 采样点处逼近精确，$\hat V_r(s_k)=v_k$，逐日的 \texttt{max\_envelope\_deficit\_yuan} 均不大于 0；次梯度符号与单调性方面，\texttt{max\_slope\_positive\_violation} 与 \texttt{max\_slope\_monotone\_violation\_interior} 的全年最大值分别为 $8.973\times10^{-7}$ 与 $1.408\times10^{-10}$ 元/kWh，均在 $10^{-6}$ 容差内；$s=S^{\max}$ 处的上界约束绑定，其次梯度是单侧的，\texttt{boundary\_slope\_jump} 单独记录，不计入单调性判据。
+
+\subsection{含终端价值项的数值处理与求解器逐级回退}
+
+加入 $\theta$ 后模型的数值条件明显变差：$\theta$ 是自由变量、量级数万元，$a_q\approx-0.5$、$b_q\approx5\times10^4$，与量级 $10^3$ kWh 的能量平衡约束不同尺度。HiGHS 的默认 presolve 在 2025-03-25 返回 status 15，即 \texttt{model\_status Unknown}、\texttt{primal\_status Infeasible}；而关闭 presolve 后在 2025-02-11 返回同样的状态。两种设置各有失败个案，但模型在这两天都可行，前者在 \texttt{presolve=False} 下成功，后者在默认设置下成功。
+
+因此求解器入口按事先固定的顺序逐级回退：\texttt{highs+presolve} 与基线逐元素相同、绝大多数日走这一级，随后依次为 \texttt{highs-no-presolve}、\texttt{highs-ds-no-presolve}、\texttt{highs-ipm}。实际走过的级别逐日记录在 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak dispatch\_year\_far.csv} 的 \texttt{solver\_path} 列，全年分布为 \texttt{highs+presolve} 332 天、\texttt{highs-no-presolve} 2 天。无论走哪一级，解都要通过 14 条逐日残差断言，因此求解路径不改变模型定义与结论。价值函数采样与近视基线仍使用原设置，两个模型的可比性不受影响。
+
+\subsection{配对对照的完整数据}
+
+两个模型使用同一情景池、同一核权重、同一执行层即逐元素相同的补救问题装配、同一冷启动口径，因此逐日差值的唯一来源是目标函数中的终端价值项 $\sum_{\omega\in\Omega_d}\pi_{d,\omega}\theta^\omega_d$。2025-01-01 至 01-31 的冷启动期两模型都取 $\theta\equiv0$，所以 02-01 的日初储电量逐元素相同，不存在初始条件差异。逐日明细见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak comparison\_daily\_far\_vs\_near.csv}，汇总见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak comparison\_far\_vs\_near.md}。
+
+采纳判定见表~\ref{tab:appendix-adoption}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{远视模型相对近视基线的采纳判定}
+  \label{tab:appendix-adoption}
+  \begin{tabularx}{\textwidth}{@{}L R@{}}
+    \toprule
+    项目 & 数值 \\
+    \midrule
+    配对天数 & 334 \\
+    近视 $C_{\mathrm{official}}$（元） & 16,998,505.69 \\
+    远视 $C_{\mathrm{official}}$（元） & 17,036,556.63 \\
+    相对节省 $(C_{\mathrm{near}}-C_{\mathrm{far}})/C_{\mathrm{far}}$ & $-0.2233\%$ \\
+    绝对节省（元） & $-38{,}050.94$ \\
+    事先固定的采纳阈值 & 0.50\% \\
+    判定 & 保留近视模型 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+判定规则在读取任何对照结果之前写入 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak frozen\_rule\_far.json} 的 \texttt{adoption\_rule} 字段：相对节省不低于 0.50\% 才采纳远视，否则保留近视并如实记录负结果；阈值不因结果回调，评分口径沿用 $C_{\mathrm{official}}$ 的定义且分母取远视费用。
+
+逐日配对结构见表~\ref{tab:appendix-paired}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{逐日配对差值结构}
+  \label{tab:appendix-paired}
+  \begin{tabularx}{\textwidth}{@{}L R@{}}
+    \toprule
+    项目 & 数值 \\
+    \midrule
+    逐日差值均值（元） & $-113.92$ \\
+    逐日差值中位数（元） & $-0.23$ \\
+    逐日差值标准差（元） & 438.50 \\
+    远视更省的天数 & 23 \\
+    近视更省的天数 & 178 \\
+    差值绝对值小于 $10^{-9}$ 元的天数 & 133 \\
+    单日最大节省（元） & 4,811.50 \\
+    单日最大亏损（元） & $-1{,}621.24$ \\
+    符号检验双侧 $p$ 值 & $7.015\times10^{-31}$ \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+符号检验的 $p$ 值仅作描述性报告，不参与判定，因为配对口径下的逐日差值并非独立同分布样本。
+
+结果结构对比如表~\ref{tab:appendix-structure-compare}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{近视模型与远视模型的结果结构对比}
+  \label{tab:appendix-structure-compare}
+  \begin{tabularx}{\textwidth}{@{}L R R@{}}
+    \toprule
+    项目 & 近视 & 远视 \\
+    \midrule
+    计划购电量（kWh） & 21,850,664.3 & 21,979,527.4 \\
+    紧急购电量（kWh） & 55,844.1 & 50,134.5 \\
+    弃置电量（kWh） & 3,848,719.1 & 3,974,766.0 \\
+    储能充电量（kWh） & 624,209.4 & 608,981.0 \\
+    储能放电量（kWh） & 505,609.6 & 493,274.6 \\
+    日末储电量均值（kWh） & 1,200.0000 & 1,200.0000 \\
+    日末储电量最小值（kWh） & 1,200.0000 & 1,200.0000 \\
+    日末储电量最大值（kWh） & 1,200.0000 & 1,200.0000 \\
+    $C_{\mathrm{official}}$（元） & 16,998,505.69 & 17,036,556.63 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{费用构成对比。} 近视侧计划购电费 16,814,531.4 元、紧急购电费 183,974.3 元；远视侧计划购电费 16,869,430.5 元、紧急购电费 167,126.1 元；两模型合计分别为 16,998,505.7 元与 17,036,556.6 元。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak validation\_report\_far.md} 第五节。
+
+\subsection{负结果的传导机制分析}
+
+终端价值项确实起了作用，但作用被执行层吸收。决策层的情景层日末储电量从近视模型的恒定 1200 kWh 提升到全年加权均值 6,398.5 kWh，全年范围为 1,264.3 至 10,763.6 kWh，说明模型愿意为次日留电。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak dispatch\_year\_far.csv} 的 \texttt{dec\_storage\_end\_mean}、\texttt{dec\_storage\_end\_min}、\texttt{dec\_storage\_end\_max} 列。
+
+决策层的这一改变在全年总量上表现为：计划购电量上升 128,863.1 kWh，相对上升 0.59\%；弃置电量上升 126,047.0 kWh，相对上升 3.3\%；紧急购电量减少 5,709.6 kWh，相对减少 10.2\%。终端价值项抬高了报童式计划的临界分位数，因为过剩成本由 $P_t$ 降到 $P_t$ 减去留电的边际价值，紧急购电的收益不足以覆盖计划购电费的上升。传导链条被执行层切断的原因在于执行层逐元素沿用定稿的补救问题装配，不含终端价值项，它在真实曲线上重新优化时仍把日末储电量压回下限，于是留电到次日这条通道被执行层切断，$C_{\mathrm{official}}$ 只剩下计划购电量的微小变化。
+
+\textbf{附加的单日诊断。} 附加诊断每月取 1 天、共 11 天，每天独立求解，日初储电量取实际链上的值，不重新滚动，并把同一组终端价值切线也放进执行层的目标函数。结果见表~\ref{tab:appendix-probe}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{执行层加入终端价值切线的单日诊断}
+  \label{tab:appendix-probe}
+  \begin{tabularx}{\textwidth}{@{}L R R@{}}
+    \toprule
+    项目 & 近视执行层 & 远视执行层 \\
+    \midrule
+    日末储电量均值（kWh） & 1,200.00 & 6,173.59 \\
+    日末储电量范围（kWh） & --- & 1,200.00---10,799.77 \\
+    紧急购电量合计（kWh） & 12,068.69 & 12,068.69 \\
+    当日费用合计（元） & 562,638.52 & 562,638.52 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+把同一组切线也放进执行层后，日末储电量均值升到 6,173.59 kWh，而当天费用合计逐日完全相同，说明留电的价值只在次日体现，单日诊断看不到，这也是本工作未能补做完整滚动对照的地方。逐日明细见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak execution\_lookahead\_probe.csv}。
+
+\textbf{这个负结果能说什么、不能说什么。} 它回答的是在既定执行层下把终端价值补进决策层能否改善官方结算费用，答案是不能。它不能回答跨日近视究竟有多大代价：执行层的近视性是配对口径的一部分，不是本次对照的发现；要回答后一个问题，必须让执行层也为次日留电并重新滚动整条决策层链，那已超出本步骤声明的计算预算，如实留作未完成的检验。它同样不能说明跨日近视假设已被证明正确，因为本次对照只在决策层远视而执行层近视这一具体口径下给出了一个负结果，而原论证的不可检验性结论与数据无关，依然成立。
+
+\textbf{适用边界的四条限定。} 其一，截断口径。终端价值取一步前瞻加近视尾部，不是无限期值函数；若把尾部也换成远视，$V_{d+1}$ 的水平会下降，因为多阶段最优不高于单阶段最优，留电的边际激励随之改变，因此本对照给出的差值是在尾部仍近视这一口径下的差值。其二，执行层仍是近视的，远视化的全部作用都通过决策层的计划购电量传导，执行层的实际充放电路径仍按当日的紧急购电费用最小化排序。其三，冷启动期。2025-01-01 至 01-31 两模型都取 $\theta\equiv0$，这是为保证 02-01 日初储能一致而事先固定的口径，不是模型结论。其四，年末截断。12-31 的终端价值对应 2026-01-01 的假想次日，其费用不计入 $C_{\mathrm{official}}$，该口径在滚动窗口假设下与其余各日一致。
+
+\subsection{远视模型的核验结果}
+
+远视模型在近视模型的 12 条断言之外新增 9 条集合与逐日断言，合计 21 条。逐日断言 C1 至 C14 全年 365 天全部通过，集合级断言 C15 至 C21 全部通过。汇总见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak validation\_report\_far.md}，逐日记录见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak validation\_daily\_far.csv}。逐日断言的最坏值见表~\ref{tab:appendix-c1-14}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{远视模型逐日断言 C1 至 C14 的全年最坏值}
+  \label{tab:appendix-c1-14}
+  \begin{tabularx}{\textwidth}{@{}c L c R@{}}
+    \toprule
+    编号 & 断言 & 容差 & 全年最坏值 \\
+    \midrule
+    C1 & 能量平衡 $\max_t\lvert G_t+E_t+R_t+D_t-L_t-C_t-W_t\rvert$ & $10^{-6}$ & 2.274e-13 \\
+    C2 & 储能递推 $\max_t\lvert S_{t+1}-S_t-\eta_cC_t+D_t/\eta_d\rvert$ & $10^{-6}$ & 4.690e-13 \\
+    C3 & 日初状态 $\lvert S_1-S_{\mathrm{start}}\rvert$ & $10^{-6}$ & 0.000e+00 \\
+    C4 & 储能边界越界量 & $10^{-6}$ & 0.000e+00 \\
+    C5 & 充放电功率越界量 & $10^{-6}$ & 0.000e+00 \\
+    C6 & 非负性违反量 & $10^{-6}$ & 1.137e-13 \\
+    C7 & 同时充放电时段数 & 0 & 0 \\
+    C8 & 紧急购电与充电同时为正的时段数 & 0 & 0 \\
+    C9 & 跨日链残差 & $10^{-6}$ & 0.000e+00 \\
+    C10 & 费用重算相对误差 & $10^{-9}$ & 0.000e+00 \\
+    C11 & 充电来源违反量 & $10^{-6}$ & 0.000e+00 \\
+    C12 & 紧急购电上界违反量 & $10^{-6}$ & 0.000e+00 \\
+    C13 & 终端价值自下方支撑 $\max_{\omega,q}[a_qS_{\omega,145}+b_q-\theta_\omega]$ & 混合 & 绝对 1.597e-04 元，相对 2.933e-09 \\
+    C14 & 终端价值取到切线上包络 $\max_\omega[\theta_\omega-\max_qa_qS_{\omega,145}-b_q]$ & 混合 & 绝对 1.209e-07 元，相对 2.142e-12 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+C13 与 C14 的容差取混合形式 $\max(10^{-4}\ \text{元},\ 10^{-6}\times\max(1,\max_\omega\lvert\theta_\omega\rvert))$。$\theta$ 的量级是数万元，用纯绝对容差会把求解器可行性容差放大后的正常数值误判为违规，用纯相对容差又会在 $\theta$ 小时过严；绝对残差与相对残差在报告中同时给出。以 $\theta\sim5\times10^4$ 元计，允许的绝对残差约 $5\times10^{-2}$ 元/天，比终端价值本身的估计精度即 $\tau_{\mathrm{env}}=15$ 元小三个数量级。C13 与 C14 只在当天有终端价值切线的日子上有定义，2025-01-01 至 01-08 的候选历史池为空或不足，按冷启动口径当日计划购电量取零且 $\theta\equiv0$，这两条断言记为缺测，全年实际测量 357 天、缺测 8 天，最坏值只在实际测量的天上取。集合级断言的结果见表~\ref{tab:appendix-c15-21}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{远视模型集合级断言 C15 至 C21 的结果}
+  \label{tab:appendix-c15-21}
+  \begin{tabularx}{\textwidth}{@{}c L L@{}}
+    \toprule
+    编号 & 断言 & 结果 \\
+    \midrule
+    C15 & 切线斜率非正 $\max_qa_q\le10^{-6}$ & 全年最大正值 8.973e-07 元/kWh \\
+    C16 & 切线斜率随 $q$ 单调不减 & 全年最大违反 0.000e+00 元/kWh \\
+    C17 & 值函数关于 $s$ 单调不增 & 全年最大违反 8.095e-08 元 \\
+    C18 & 次梯度单调不减（内部点） & 全年最大违反 9.754e-11 元/kWh \\
+    C19 & 网格收敛（判据 A 与判据 B） & 收敛 334/334 天 \\
+    C20 & $\theta\equiv0$ 退化 & 比较 334 天，不一致 0 天，最大差 4.992e-07 kWh，通过 \\
+    C21 & 因果性（2025-06-21 扰动） & 切线集合一致、计划一致，通过 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{C20 的分层核验。} 装配层把 $\theta$ 完全不添加时，远视装配与近视装配的 $c$、$A_{\mathrm{eq}}$、$b_{\mathrm{eq}}$、$A_{\mathrm{ub}}$、$b_{\mathrm{ub}}$、变量数与边界数逐元素相同，全年最大差异 0.000e+00，说明远视装配没有引入任何额外偏差。求解层把逐日终端价值切线全部置零后重跑决策层，比较 334 天，计划购电量最大绝对差 $4.992\times10^{-7}$ kWh、相对差 $4.864\times10^{-10}$、$\max\lvert\theta\rvert=0.000e+00$ 元。严格逐元素相同在浮点求解器下不可得，因此以 $10^{-6}$ kWh 即与残差容差同量级为判据，并同时报告相对量，未掩盖任何一项。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak degeneracy\_test.json}。
+
+\textbf{C21 目标日扰动因果性检验。} 选 2025-06-21，把该日及其之后的全部原始负载与光伏观测打乱并施加 $1.37x+31$ 的扰动，重建处境特征后重算该日的候选池、核权重与终端价值切线集合，再装配远视模型求解。结果为候选池完全一致、核权重逐元素一致、终端价值切线集合逐元素一致即 61 条对 61 条、计划购电量逐元素一致且最大绝对变化 0 kWh、目标日观测确实已被改动、该日之前的处境特征逐元素不变。这证明第 $d$ 天的切线集合只依赖 $j<d$ 的观测，远视递归没有引入前视污染。需要注意这一点无法由残差核验发现，因为用未来数据估计 $V_{d+1}$ 得到的仍是可行解、残差仍为零，只有扰动实验能发现。出处 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak causality\_test.json}。
+
+\textbf{决策层情景层残留。} 决策层的情景层核验另有 341 天出现少量残留，逐日计数见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak decision\_layer\_residual\_far.json}；这一数字与近视基线同为 341 天，说明终端价值项没有引入新的情景层残留。这些残留只存在于情景设想层，不影响任何填报数值。残留的性质是第二阶段在完美信息下，对缺口大于期望缺口的情景仍选择先充电的边界情形；执行层已用 C12 的常数上界彻底排除该行为。
+
+\textbf{结果结构核对。} \texttt{result2\_far.xlsx} 三张工作表的表头与附件 5 模板逐字一致，计划购电量 335 行 $\times$ 147 列且 334 天填满无缺失，充放电量 2005 行 $\times$ 6 列，紧急购电量 338 条非零记录。该文件与 \texttt{outputs/\allowbreak taskComposite/\allowbreak result2.xlsx} 的工作表行列结构一致，指定四日表格两两交叉一致，见 \texttt{outputs/\allowbreak taskCompositeFar/\allowbreak tables\_far.md}。按采纳判定，正文与最终填报仍以近视模型为准。
+
+\textbf{规模与预算。} 终端价值采样求解 21,798 次，单核累计耗时 62,451.0 秒；远视主求解 334 天；退化核验 334 天；决策层单日变量规模为 $144\times(2+5\lvert\Omega_d\rvert)+\lvert\Omega_d\rvert$；终端价值约束条数为 $\lvert\Omega_d\rvert\times Q_d$，$Q_d$ 为当日有效切线数。
+
+\section{赋权方案设计的完整证据}
+
+\subsection{特征消融的完整表格}
+
+候选顺序在读取任何消融结果之前固定为 \texttt{net\_lag\_7d}、\texttt{weekday7}、\texttt{load\_mean\_3d}、\texttt{pv\_mean\_3d}、\texttt{weekend}、\texttt{load\_lag\_7d}、\texttt{pv\_lag\_7d}、\texttt{net\_mean\_7d}、\texttt{net\_mean\_3d}、\texttt{load\_std\_7d}、\texttt{pv\_std\_7d}；\texttt{season} 作为日历结构先验置于最前，是一月窗口无法识别的结构性例外，不占四个语义特征名额。消融固定 $h=1$，纳入条件为平均能量分数相对改善超过 0.5\% 且至少 60\% 的验证日严格改善。完整数值见表~\ref{tab:appendix-ablation}，出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak feature\_ablation.csv} 与 \texttt{outputs/\allowbreak taskComposite/\allowbreak feature\_report.md}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{按预先固定顺序逐步纳入特征的消融结果}
+  \label{tab:appendix-ablation}
+  \begin{tabularx}{\textwidth}{@{}L R R R R c@{}}
+    \toprule
+    依序候选 & 加入前平均 ES(kW) & 加入后平均 ES(kW) & 相对改善 & 改善日数 & 判定 \\
+    \midrule
+    \texttt{net\_lag\_7d} & 1324.825 & 741.507 & $+44.030\%$ & 320/334 & 纳入 \\
+    \texttt{weekday7} & 741.507 & 726.260 & $+2.056\%$ & 144/334 & 不纳入 \\
+    \texttt{load\_mean\_3d} & 741.507 & 735.862 & $+0.761\%$ & 164/334 & 不纳入 \\
+    \texttt{pv\_mean\_3d} & 741.507 & 620.378 & $+16.336\%$ & 291/334 & 纳入 \\
+    \texttt{weekend} & 620.378 & 625.759 & $-0.867\%$ & 171/334 & 不纳入 \\
+    \texttt{load\_lag\_7d} & 620.378 & 556.874 & $+10.236\%$ & 246/334 & 纳入 \\
+    \texttt{pv\_lag\_7d} & 556.874 & 555.915 & $+0.172\%$ & 222/334 & 不纳入 \\
+    \texttt{net\_mean\_7d} & 556.874 & 553.097 & $+0.678\%$ & 232/334 & 纳入 \\
+    \texttt{net\_mean\_3d} & 553.097 & 570.830 & $-3.206\%$ & 114/334 & 不纳入 \\
+    \texttt{load\_std\_7d} & 553.097 & 608.354 & $-9.990\%$ & 141/334 & 不纳入 \\
+    \texttt{pv\_std\_7d} & 553.097 & 565.119 & $-2.174\%$ & 135/334 & 不纳入 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+固定顺序的逐步纳入存在路径依赖，本工作不重排候选以追求更好的数字，失败特征的结果一并保留在 \texttt{outputs/\allowbreak taskComposite/\allowbreak feature\_ablation.csv} 与 \texttt{outputs/\allowbreak taskComposite/\allowbreak feature\_ablation\_daily.csv}。
+
+\subsection{事后补充候选的通过过程}
+
+结构探索发现低负载日落在周五与周六，而 \texttt{weekend} 只把周六与周日标为同质，据此另提两个候选，用完全相同的判据复核。二者是在看到结构证据之后才提出的，属于事后假设，因此基础集固定为选择窗选出的特征集合，并同时在确认窗上独立复核。完整数值见表~\ref{tab:appendix-supplementary}，出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak supplementary\_ablation.csv} 与 \texttt{outputs/\allowbreak taskComposite/\allowbreak supplementary\_ablation\_confirm.csv}。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{事后补充候选在两个窗口上的复核结果}
+  \label{tab:appendix-supplementary}
+  \begin{tabularx}{\textwidth}{@{}L L R R R R c@{}}
+    \toprule
+    窗口 & 补充候选 & 加入前平均 ES(kW) & 加入后平均 ES(kW) & 相对改善 & 改善日数 & 判定 \\
+    \midrule
+    全年 334 天 & \texttt{low\_load\_day} & 620.378 & 584.612 & $+5.765\%$ & 263/334 & 通过 \\
+    全年 334 天 & \texttt{weekday7} & 584.612 & 577.189 & $+1.270\%$ & 156/334 & 不通过 \\
+    确认窗 184 天 & \texttt{low\_load\_day} & 607.224 & 566.802 & $+6.657\%$ & 159/184 & 通过 \\
+    确认窗 184 天 & \texttt{weekday7} & 566.802 & 559.450 & $+1.297\%$ & 92/184 & 不通过 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+两个窗口都通过的事后候选为 \texttt{low\_load\_day}。它的编码来自纯描述性的星期几结构证据，即低负载日落在周五与周六，与能量分数无关，并在时间上独立的确认窗复现了同向改善，故并入最终冻结规则；方法上仍标注为事后补充，证据强度低于按预先固定顺序纳入的主消融特征。
+
+\subsection{带宽搜索的完整过程}
+
+修订特征集上重新搜索带宽，先在 $[0.05,20]$ 上作 25 点对数粗搜，再作三轮各 17 点细搜，同时记录等权极限，共 77 次候选评估，结果 $h=1.043841464$，状态为 \texttt{interior\_optimum}。旧特征集在同一协议下独立搜索带宽得 $h=0.390601653$，两者带宽各自冻结，不交叉调参。仅平均能量分数参与选优，有效情景数只作诊断。搜索轨迹见 \texttt{outputs/\allowbreak taskComposite/\allowbreak bandwidth\_search\_final.csv} 记录修订特征集、\texttt{outputs/\allowbreak taskComposite/\allowbreak bandwidth\_search\_legacy.csv} 记录旧特征集，每份均为 77 行候选记录，其中 \texttt{uniform\_limit} 一行对应等权极限 $h=\infty$，其平均能量分数为 1334.485697 kW。
+
+\subsection{新旧赋权方案的全部对比}
+
+\textbf{评分对比。} 等权基线平均能量分数 1334.485697 kW，旧特征集 1248.040416 kW，修订特征集 551.071402 kW。修订相对等权改善 58.705335\%，改善日数 328/334；相对旧特征集改善 55.845068\%，改善日数 318/334。采纳门槛为 3.0\%，判定为采纳修订特征集。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak frozen\_rule.json}。
+
+\textbf{样本外确认。} 验证期按时间一分为二，选择窗 2025-02-01 至 2025-06-30 共 150 天，确认窗 2025-07-01 至 2025-12-31 共 184 天，两窗的池、标尺与评分规则完全一致。完整数值见表~\ref{tab:appendix-split}，出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak split\_confirmation.csv}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{三套赋权方案在两个时间窗上的样本外确认}
+  \label{tab:appendix-split}
+  \begin{tabularx}{\textwidth}{@{}L L R R R@{}}
+    \toprule
+    窗口 & 方法 & 天数 & 平均 ES(kW) & 相对等权 \\
+    \midrule
+    选择窗 & 等权基线 & 150 & 1370.781 & $+0.000\%$ \\
+    选择窗 & 旧特征集 & 150 & 1263.269 & $+7.843\%$ \\
+    选择窗 & 修订特征集 & 150 & 582.713 & $+57.490\%$ \\
+    确认窗 & 等权基线 & 184 & 1304.897 & $+0.000\%$ \\
+    确认窗 & 旧特征集 & 184 & 1235.944 & $+5.284\%$ \\
+    确认窗 & 修订特征集 & 184 & 528.936 & $+59.465\%$ \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{有效情景数对比。} 修订特征集的 $K_{\mathrm{eff}}$ 均值 12.17、范围 1.01 至 40.08；旧特征集均值 12.98、范围 1.23 至 26.70；等权基线均值等于池规模 46.685629、范围 24 至 84。周同期特征让权重更集中，这是平均能量分数改善的主要来源，同时意味着情景覆盖变窄，因此另做决策层抽样回测兜底。
+
+\textbf{决策层抽样回测。} 每月取前 2 天共 22 天，用三套权重分别求解决策层与执行层，在真实曲线上结算，日初储电量统一取 6000 kWh 以隔离权重差异。完整数值见表~\ref{tab:appendix-backtest}，出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak backtest\_sampled.csv}。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{三套赋权方案在 22 天抽样上的真实曲线回测}
+  \label{tab:appendix-backtest}
+  \begin{tabularx}{\textwidth}{@{}L R R R R R@{}}
+    \toprule
+    方法 & 天数 & 计划购电总量(kWh) & 紧急购电总量(kWh) & 总费用(元) & 平均 $K_{\mathrm{eff}}$ \\
+    \midrule
+    修订特征集 & 22 & 1,394,727.4 & 14,065.2 & 1,125,932.8 & 10.84 \\
+    旧特征集 & 22 & 1,515,486.7 & 20,030.7 & 1,203,114.1 & 10.69 \\
+    等权基线 & 22 & 1,491,144.3 & 39,212.5 & 1,255,970.2 & 32.41 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+修订特征集总费用 1,125,932.8 元，比等权基线 1,255,970.2 元低 10.354\%。能量分数上的改善确实转化为真实费用与紧急购电量的下降。
+
+\textbf{冻结规则的最终内容。} 最终特征集合为 \texttt{season}、\texttt{net\_lag\_7d}、\texttt{pv\_mean\_3d}、\texttt{load\_lag\_7d}、\texttt{net\_mean\_7d}、\texttt{low\_load\_day}，带宽 $h=1.0438414641946645$，季节月份环形距离 1，预热 7 日，标尺随池滚动。规则自 2025-02-01 起可用。完整记录见 \texttt{outputs/\allowbreak taskComposite/\allowbreak frozen\_rule.json}。
+
+\subsection{附带记录的两项口径说明}
+
+\textbf{时间标签口径。} 附件 5 的 result2 模板首段标签为 \texttt{0:10-0:20}、末段标签为 \texttt{0:00-0:10+1}，比附件 2 的右端点标签整体前移一个时段。主口径采用位置对齐，即附件第 $t$ 个观测对应模板第 $t$ 个数据列，正文表 1 即按此口径填报。作为对照，字面时钟口径下四日的六个指定时段数值分别为 2025-03-20 的 33.15、0.00、27.55、514.51、688.24、718.41，2025-06-21 的 1.83、0.00、7.19、169.77、473.16、638.07，2025-09-23 的 0.50、$-0.00$、1.51、478.16、773.96、816.72，2025-12-21 的 339.13、119.47、314.44、808.63、705.48、726.84。两种口径的全天合计相同，差异只体现在逐时段错位上。出处 \texttt{outputs/\allowbreak taskComposite/\allowbreak validation\_report.md} 第三节。
+
+\textbf{结果文件结构。} \texttt{result2.xlsx} 三张工作表的表头与附件 5 模板逐字一致；计划购电量工作表 335 行 $\times$ 147 列，334 天填满无缺失；充放电量工作表 2005 行 $\times$ 6 列，每天 6 个四小时时段，0:00 与 24:00 储电量填在当日前两行的 E、F 列；紧急购电量工作表 362 行 $\times$ 3 列，共 361 条非零记录，按模板表 4 示例合并连续时段且只填非零。模板只给出前三天的格式示例，因此后两张表按实际记录展开行数，列结构与标签完全照抄模板。完整结构记录见 \texttt{outputs/\allowbreak taskComposite/\allowbreak result2\_structure.json}。
+
+\section*{程序代码}
+
+本节给出问题一与问题二核心求解代码的完整清单。源码文件同时保存在支撑材料的 \texttt{code} 目录中，与论文中的模型表述逐条对应：问题一的主线性规划见 \texttt{solve\_q1.py}，问题二的模型装配与求解见 \texttt{model.py}，两阶段调度的规划层与执行层见 \texttt{dispatch.py}。
+
+\subsection*{问题一主求解脚本 solve\_q1.py}
+
+该脚本读取同目录的 \texttt{附件1.csv}，在日循环边界下求解问题一的主线性规划，输出逐时段调度明细、中文汇总与结果填报表。
+
+\begin{lstlisting}[language=Python,caption={问题一主求解脚本 solve\_q1.py},label={lst:solveq1},captionpos=t]
+"""问题1：自由初始储电量、日循环边界下的主线性规划。
+
+运行：python -B solve_q1.py
+输入和输出均相对于本脚本定位；主解不添加互斥或次级目标。
+另外分析最优费用下的初始电量区间。
+仅输出完整调度dispatch.csv和中文汇总summary.json，不生成中间或写作文件。
+"""
+
+import csv
+import hashlib
+import io
+import json
+import platform
+from pathlib import Path
+
+import numpy as np
+import scipy
+from scipy.optimize import linprog
+from scipy.sparse import csr_matrix, lil_matrix, vstack
+
+
+N = 144
+DELTA = 1 / 6
+S_MIN, S_MAX = 1200.0, 10800.0
+MAX_ENERGY = 5000 * DELTA
+ETA_C = ETA_D = 0.9
+TOL = 1e-6  # 电量、约束残差的绝对容差，单位kWh。
+SOLVER_OPTIONS = {"primal_feasibility_tolerance": 1e-8,
+                  "dual_feasibility_tolerance": 1e-8}
+
+
+def time_label(boundary):
+    """boundary=0和144分别表示当天00:00和24:00。"""
+    minutes = boundary * 10
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
+def load_data(path):
+    raw = path.read_bytes()
+    reader = csv.DictReader(io.StringIO(raw.decode("utf-8-sig")))
+    columns = ["时段序号", "时间", "电价", "小区负载", "光伏发电预测功率",
+               "负载能量(kWh)", "光伏能量(kWh)"]
+    if reader.fieldnames != columns:
+        raise ValueError(f"CSV列名或顺序不符：{reader.fieldnames}")
+    rows = list(reader)
+    if len(rows) != N:
+        raise ValueError(f"应有{N}个时段，实际为{len(rows)}")
+    for t, row in enumerate(rows, start=1):
+        if None in row or any(value is None or not value.strip() for value in row.values()):
+            raise ValueError(f"第{t}段存在缺失值或多余字段")
+        allowed_times = {time_label(t)} if t < N else {"0:00+1", "00:00+1", "24:00"}
+        if int(row["时段序号"]) != t or row["时间"].strip() not in allowed_times:
+            raise ValueError(f"第{t}段序号或时间标签不符")
+
+    values = np.array([[float(row[name]) for name in columns[2:]] for row in rows])
+    if not np.isfinite(values).all() or (values < 0).any():
+        raise ValueError("数值列包含非有限值或负值")
+    price, load_power, pv_power, stored_L, stored_R = values.T
+    if (price <= 0).any():
+        raise ValueError("当前问题1假设电价严格为正")
+
+    # 功率乘时长得到电量；CSV已有电量列只核验，不重复换算。
+    L, R = load_power * DELTA, pv_power * DELTA
+    errors = {"load_energy_max_difference_kwh": float(np.max(np.abs(L - stored_L))),
+              "pv_energy_max_difference_kwh": float(np.max(np.abs(R - stored_R)))}
+    if max(errors.values()) > TOL:
+        raise ValueError(f"功率与电量列不一致：{errors}")
+    audit = {"filename": path.name, "sha256": hashlib.sha256(raw).hexdigest(),
+             "period_count": N, "energy_source": "power_columns_times_1_over_6",
+             "price_min": float(price.min()), "price_max": float(price.max()),
+             "load_total_kwh": float(L.sum()), "pv_total_kwh": float(R.sum()),
+             **errors}
+    return price, L, R, audit
+
+
+def build_lp(price, L, R):
+    """变量顺序为[G(144), C(144), D(144), W(144), S(145)]。"""
+    for name, vector in (("price", price), ("L", L), ("R", R)):
+        if np.shape(vector) != (N,) or not np.isfinite(vector).all():
+            raise ValueError(f"{name}必须为长度{N}的有限数值向量")
+    if (price <= 0).any() or (L < 0).any() or (R < 0).any():
+        raise ValueError("要求price>0且L、R非负")
+    objective = np.zeros(5 * N + 1)
+    objective[:N] = price
+    A_eq = lil_matrix((2 * N + 1, 5 * N + 1))
+    b_eq = np.zeros(2 * N + 1)
+    for t in range(N):
+        # 能量平衡：G - C + D - W = L - R。
+        A_eq[t, [t, N + t, 2 * N + t, 3 * N + t]] = [1, -1, 1, -1]
+        b_eq[t] = L[t] - R[t]
+        # C、D均为母线侧电量；S[0]对应论文S_1。
+        A_eq[N + t, [N + t, 2 * N + t, 4 * N + t, 4 * N + t + 1]] = [
+            -ETA_C, 1 / ETA_D, -1, 1]
+    A_eq[-1, 4 * N] = -1
+    A_eq[-1, 5 * N] = 1  # 日循环；不额外固定S_1为6000。
+    bounds = ([(0, None)] * N + [(0, MAX_ENERGY)] * (2 * N)
+              + [(0, float(value)) for value in R] + [(S_MIN, S_MAX)] * (N + 1))
+    return objective, A_eq.tocsr(), b_eq, bounds
+
+
+def solve_model(model):
+    objective, A_eq, b_eq, bounds = model
+    result = linprog(objective, A_eq=A_eq, b_eq=b_eq, bounds=bounds,
+                     method="highs", options=SOLVER_OPTIONS)
+    if not result.success or result.status != 0:
+        raise RuntimeError(f"LP未达到最优状态：{result.message}")
+    return result
+
+
+def unpack(x):
+    return x[:N], x[N:2*N], x[2*N:3*N], x[3*N:4*N], x[4*N:]
+
+
+def validate_solution(result, price, L, R, model):
+    """直接从物理公式重算残差，不仅依赖求解器的可行性判断。"""
+    G, C, D, W, S = unpack(result.x)
+    if not np.isfinite(result.x).all():
+        raise RuntimeError("求解结果包含非有限值")
+    residuals = {
+        "energy_balance_max_abs_kwh": float(np.max(np.abs(G + R + D - L - C - W))),
+        "storage_dynamics_max_abs_kwh": float(np.max(np.abs(np.diff(S) - ETA_C*C + D/ETA_D))),
+        "daily_cycle_abs_kwh": float(abs(S[-1] - S[0])),
+        "bound_max_violation_kwh": float(max(0, -G.min(), -C.min(), -D.min(), -W.min(),
+            C.max()-MAX_ENERGY, D.max()-MAX_ENERGY, (W-R).max(), S_MIN-S.min(), S.max()-S_MAX)),
+        "daily_charge_discharge_abs_kwh": float(abs(D.sum() - ETA_C*ETA_D*C.sum())),
+        "daily_energy_ledger_abs_kwh": float(abs(G.sum() - (
+            L.sum()-R.sum()+W.sum()+(1-ETA_C*ETA_D)*C.sum()))),
+    }
+    objective, A_eq, b_eq, bounds = model
+    recomputed_cost = float(price @ G)
+    cost_error = abs(recomputed_cost - result.fun)
+    # 对偶目标与原目标应一致；独立记录最优性证据。
+    dual_value = float(b_eq @ result.eqlin.marginals)
+    for i, (lower, upper) in enumerate(bounds):
+        dual_value += lower * result.lower.marginals[i]
+        if upper is not None:
+            dual_value += upper * result.upper.marginals[i]
+    dual_gap = abs(recomputed_cost - dual_value)
+    stationarity = float(np.max(np.abs(objective - A_eq.T @ result.eqlin.marginals
+                                       - result.lower.marginals - result.upper.marginals)))
+    cost_tol = max(1e-6, 1e-9 * abs(recomputed_cost))
+    passed = (max(residuals.values()) <= TOL and cost_error <= cost_tol
+              and dual_gap <= cost_tol and stationarity <= TOL)
+    overlap = np.flatnonzero((C > TOL) & (D > TOL))
+    validation = {
+        "lp_checks_passed": bool(passed), "energy_tolerance_kwh": TOL,
+        "cost_tolerance_yuan": cost_tol, **residuals,
+        "objective_recalculation_abs_yuan": float(cost_error),
+        "dual_objective_yuan": dual_value, "primal_dual_gap_abs_yuan": float(dual_gap),
+        "dual_stationarity_max_abs": stationarity,
+        "mutual_exclusivity_passed": bool(len(overlap) == 0),
+        "simultaneous_charge_discharge_count": int(len(overlap)),
+        "simultaneous_charge_discharge_periods": [
+            {"t": int(t+1), "start": time_label(t), "end": time_label(t+1),
+             "C_kwh": float(C[t]), "D_kwh": float(D[t])} for t in overlap],
+    }
+    if not passed:
+        raise RuntimeError("结果校验失败：" + json.dumps(validation, ensure_ascii=False))
+    return validation
+
+
+def analyze_solution(result, price, L, R):
+    """只统计现有主解；无储能对照直接计算，不增加优化目标。"""
+    G, C, D, W, S = unpack(result.x)
+    baseline_G = np.maximum(L - R, 0)
+    baseline_cost = float(price @ baseline_G)
+    cost = float(price @ G)
+    # 电源在母线上不可区分；以下按光伏优先供负载、富余再充电分摊。
+    pv_charge = np.minimum(C, np.maximum(R - L, 0))
+    grid_charge = C - pv_charge
+    blocks = []
+    for start in range(0, N, 24):
+        end = start + 24
+        section = slice(start, end)
+        blocks.append({
+            "时间段": f"{time_label(start)}—{time_label(end)}",
+            "购电量(kWh)": float(G[section].sum()),
+            "充电量(kWh)": float(C[section].sum()),
+            "放电量(kWh)": float(D[section].sum()),
+            "段首储电量(kWh)": float(S[start]),
+            "段末储电量(kWh)": float(S[end]),
+            "购电费用(元)": float(price[section] @ G[section]),
+        })
+    return {
+        "无储能对照": {
+            "说明": "同一负载、光伏和电价下，不使用储能，缺口购电、光伏富余弃置。",
+            "购电费用(元)": baseline_cost,
+            "购电量(kWh)": float(baseline_G.sum()),
+            "弃光量(kWh)": float(np.maximum(R - L, 0).sum()),
+            "主模型节省费用(元)": baseline_cost - cost,
+            "主模型节费率(%)": 100 * (baseline_cost - cost) / baseline_cost if baseline_cost > 0 else None,
+            "主模型减少购电量(kWh)": float(baseline_G.sum() - G.sum()),
+        },
+        "运行特征": {
+            "充电时段数": int(np.count_nonzero(C > TOL)),
+            "放电时段数": int(np.count_nonzero(D > TOL)),
+            "静置时段数": int(np.count_nonzero((C <= TOL) & (D <= TOL))),
+            "充电达到功率上限的时段数": int(np.count_nonzero(np.abs(C - MAX_ENERGY) <= TOL)),
+            "放电达到功率上限的时段数": int(np.count_nonzero(np.abs(D - MAX_ENERGY) <= TOL)),
+            "外网最大购电功率(kW)": float(G.max() / DELTA),
+            "储能最大放电功率(kW)": float(D.max() / DELTA),
+            "储电量达到下限的时刻": [time_label(int(t)) for t in np.flatnonzero(np.abs(S - S_MIN) <= TOL)],
+            "储电量达到上限的时刻": [time_label(int(t)) for t in np.flatnonzero(np.abs(S - S_MAX) <= TOL)],
+        },
+        "充电来源分摊": {
+            "口径": "按光伏优先直供负载、富余光伏用于充电分摊；不是新增的电能路由约束。",
+            "光伏充电量(kWh)": float(pv_charge.sum()),
+            "外网充电量(kWh)": float(grid_charge.sum()),
+        },
+        "每四小时汇总": blocks,
+    }
+
+
+def analyze_initial_energy(result, model):
+    """在最优面上求S_1的上下端点；辅助优化不替换主调度。"""
+    f, A_eq, b_eq, bounds = model
+    cost = float(f @ result.x)
+    face_A = vstack([A_eq, csr_matrix(f[None, :])], format="csr")
+    face_b = np.append(b_eq, cost)  # 使用未舍入费用，不能用展示值35118.60。
+    endpoints, solutions = [], []
+    for direction, name in ((1, "最小初始电量"), (-1, "最大初始电量")):
+        objective = np.zeros_like(f)
+        objective[4*N] = direction
+        endpoint = solve_model((objective, face_A, face_b, bounds))
+        G, C, D, W, S = unpack(endpoint.x)
+        residual = float(np.max(np.abs(A_eq @ endpoint.x - b_eq)))
+        bound_error = max(0.0, max(lower - endpoint.x[i] for i, (lower, _) in enumerate(bounds)),
+                          max(endpoint.x[i] - upper for i, (_, upper) in enumerate(bounds) if upper is not None))
+        cost_error = float(abs(f @ endpoint.x - cost))
+        dual = float(face_b @ endpoint.eqlin.marginals)
+        for i, (lower, upper) in enumerate(bounds):
+            dual += lower * endpoint.lower.marginals[i]
+            if upper is not None:
+                dual += upper * endpoint.upper.marginals[i]
+        dual_gap = float(abs(objective @ endpoint.x - dual))
+        stationarity = float(np.max(np.abs(objective - face_A.T @ endpoint.eqlin.marginals
+                                          - endpoint.lower.marginals - endpoint.upper.marginals)))
+        sign_error = max(0.0, -float(endpoint.lower.marginals.min()), float(endpoint.upper.marginals.max()))
+        if max(residual, bound_error, cost_error, dual_gap, stationarity, sign_error) > TOL:
+            raise RuntimeError(f"{name}的最优面或对偶校验未通过")
+        overlap = int(np.count_nonzero((C > TOL) & (D > TOL)))
+        endpoints.append({"端点": name, "初始储电量(kWh)": float(S[0]),
+                          "购电费用(元)": float(f @ endpoint.x), "费用固定误差(元)": cost_error,
+                          "物理等式最大误差(kWh)": residual, "最大越界量(kWh)": float(bound_error),
+                          "辅助优化原始与对偶目标差(kWh)": dual_gap,
+                          "辅助优化驻点条件最大误差": stationarity,
+                          "辅助优化对偶符号最大误差": sign_error,
+                          "同时充放电时段数": overlap})
+        solutions.append(endpoint.x)
+    low, high = (endpoint["初始储电量(kWh)"] for endpoint in endpoints)
+    if high < low - TOL:
+        raise RuntimeError("初始电量区间上下端点顺序异常")
+    _, c_low, d_low, _, _ = unpack(solutions[0])
+    _, c_high, d_high, _, _ = unpack(solutions[1])
+    conflicting = ((c_low > TOL) & (d_high > TOL)) | ((d_low > TOL) & (c_high > TOL))
+    whole_interval_physical = not conflicting.any() and all(e["同时充放电时段数"] == 0 for e in endpoints)
+    return {
+        "分析方法": "保留原约束并固定未舍入最优费用，分别最小化和最大化S_1。",
+        "固定最优费用(元)": cost, "下端点(kWh)": low, "上端点(kWh)": high,
+        "区间宽度(kWh)": max(0.0, high-low), "数值核验容差": TOL,
+        "是否存在非退化最优区间": "是" if high-low > TOL else "否（数值精度范围内）",
+        "端点校验": endpoints,
+        "整个区间的互斥可行性": ("通过：两端点无相反运行模式，凸组合仍满足互斥。"
+                                 if whole_interval_physical else "尚未证明，不能仅凭LP凸性认定互斥。"),
+        "填表所用初始储电量(kWh)": float(result.x[4*N]),
+        "填表策略": "沿用原主解，不用辅助优化的端点策略替换。",
+    }
+
+
+def export_results(directory, result, price, L, R, audit, validation, initial_energy):
+    G, C, D, W, S = unpack(result.x)
+    directory.mkdir(exist_ok=True)
+    # 保存未舍入的求解结果，避免展示精度破坏能量账目。
+    with (directory / "dispatch.csv").open("w", encoding="utf-8-sig", newline="") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["时段序号", "开始时间", "结束时间", "电价P(元/kWh)", "负载电量L(kWh)", "光伏电量R(kWh)",
+                         "购电量G(kWh)", "充电量C(kWh)", "放电量D(kWh)", "弃光量W(kWh)",
+                         "段首储电量S_t(kWh)", "段末储电量S_t+1(kWh)", "购电费用(元)"])
+        for t in range(N):
+            writer.writerow([t+1, time_label(t), time_label(t+1), price[t], L[t], R[t],
+                             G[t], C[t], D[t], W[t], S[t], S[t+1], price[t]*G[t]])
+    audit_labels = {
+        "filename": "数据文件", "sha256": "文件SHA256校验值", "period_count": "时段数量",
+        "price_min": "最低电价(元/kWh)", "price_max": "最高电价(元/kWh)",
+        "load_total_kwh": "全天负载电量(kWh)", "pv_total_kwh": "全天光伏电量(kWh)",
+        "load_energy_max_difference_kwh": "负载电量列最大核验误差(kWh)",
+        "pv_energy_max_difference_kwh": "光伏电量列最大核验误差(kWh)",
+    }
+    validation_labels = {
+        "energy_tolerance_kwh": "电量校验容差(kWh)", "cost_tolerance_yuan": "费用校验容差(元)",
+        "energy_balance_max_abs_kwh": "逐时段能量平衡最大误差(kWh)",
+        "storage_dynamics_max_abs_kwh": "储电递推最大误差(kWh)",
+        "daily_cycle_abs_kwh": "日循环误差(kWh)",
+        "bound_max_violation_kwh": "变量边界最大越界量(kWh)",
+        "daily_charge_discharge_abs_kwh": "全天充放电效率关系误差(kWh)",
+        "daily_energy_ledger_abs_kwh": "全天能量账目误差(kWh)",
+        "objective_recalculation_abs_yuan": "购电费用重算误差(元)",
+        "dual_objective_yuan": "对偶目标值(元)",
+        "primal_dual_gap_abs_yuan": "原始与对偶目标差(元)",
+        "dual_stationarity_max_abs": "对偶驻点条件最大误差",
+        "simultaneous_charge_discharge_count": "同时充放电时段数",
+    }
+    chinese_validation = {
+        "LP数值校验": "通过" if validation["lp_checks_passed"] else "未通过",
+        "充放电互斥检查": "通过" if validation["mutual_exclusivity_passed"] else "未通过",
+        **{label: validation[key] for key, label in validation_labels.items()},
+        "同时充放电明细": [
+            {"时段序号": row["t"], "开始时间": row["start"], "结束时间": row["end"],
+             "充电量(kWh)": row["C_kwh"], "放电量(kWh)": row["D_kwh"]}
+            for row in validation["simultaneous_charge_discharge_periods"]],
+    }
+    summary = {
+        "当前阶段": "主线性规划及初始储电量最优区间分析",
+        "求解结果": {
+            "最优购电费用(元)": float(price @ G), "全天购电量(kWh)": float(G.sum()),
+            "全天充电量_母线侧(kWh)": float(C.sum()), "全天放电量_母线侧(kWh)": float(D.sum()),
+            "全天弃光量(kWh)": float(W.sum()), "起始储电量S_1(kWh)": float(S[0]),
+            "日末储电量S_145(kWh)": float(S[-1]), "实际最低储电量(kWh)": float(S.min()),
+            "实际最高储电量(kWh)": float(S.max()),
+            "全天储能损耗(kWh)": float((1-ETA_C)*C.sum()+(1/ETA_D-1)*D.sum()),
+        },
+        "结果校验": chinese_validation,
+        "结果分析": analyze_solution(result, price, L, R),
+        "初始储电量最优区间": initial_energy,
+        "结果表口径": {"电量单位": "kWh", "费用单位": "元",
+                       "数值精度": "调度CSV和汇总保留计算精度；正式Excel与论文表建议显示两位小数，汇总按未舍入值计算",
+                       "时间标签修正": "官方模板首段为0:10-0:20、末段为次日0:00-0:10；输出副本修正为00:00-00:10至23:50-24:00。"},
+        "输入数据核验": {**{label: audit[key] for key, label in audit_labels.items()},
+                         "电量计算口径": "功率列乘以1/6小时，已有电量列仅作交叉核验"},
+        "模型参数": {
+            "时段长度(小时)": DELTA, "充电效率": ETA_C, "放电效率": ETA_D,
+            "储电量下限(kWh)": S_MIN, "储电量上限(kWh)": S_MAX,
+            "单时段充放电上限_母线侧(kWh)": MAX_ENERGY, "初始储电量": "由优化决定",
+            "日循环约束": "启用", "二进制变量": "未使用", "次级目标": "未使用",
+        },
+        "求解器信息": {
+            "求解方法": "SciPy线性规划接口 / HiGHS", "状态码": int(result.status),
+            "求解状态": "已获得最优解", "迭代次数": int(result.nit),
+            "原始可行性容差": SOLVER_OPTIONS["primal_feasibility_tolerance"],
+            "对偶可行性容差": SOLVER_OPTIONS["dual_feasibility_tolerance"],
+            "变量数量": len(result.x), "等式约束数量": 2*N+1,
+            "Python版本": platform.python_version(), "NumPy版本": np.__version__, "SciPy版本": scipy.__version__,
+        },
+        "结果说明": ("主解通过互斥检查，无需互斥修复；初始电量的唯一性见最优区间分析，结果表仍沿用原主解。"
+                     if validation["mutual_exclusivity_passed"] else
+                     "LP通过数值校验，但存在同时充放电；需进入处理阶段，尚不能作为最终物理调度。"),
+    }
+    with (directory / "summary.json").open("w", encoding="utf-8") as stream:
+        json.dump(summary, stream, ensure_ascii=False, indent=2, allow_nan=False)
+        stream.write("\n")
+    return summary
+
+
+def main():
+    base = Path(__file__).resolve().parent
+    price, L, R, audit = load_data(base / "附件1.csv")
+    model = build_lp(price, L, R)
+    result = solve_model(model)
+    validation = validate_solution(result, price, L, R, model)
+    initial_energy = analyze_initial_energy(result, model)
+    summary = export_results(base / "outputs", result, price, L, R, audit, validation, initial_energy)
+    if not validation["mutual_exclusivity_passed"]:
+        raise RuntimeError("存在同时充放电，已保存调度审查结果；尚不能作为最终物理调度")
+    print(json.dumps({key: summary[key] for key in ("求解结果", "初始储电量最优区间", "结果说明")},
+                     ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\subsection*{问题二两阶段随机线性规划的稀疏装配 model.py}
+
+该模块给出问题二的物理与价格参数、决策层与执行层的变量布局、稀疏约束装配与求解入口，含充电来源约束与去退化项。
+
+\begin{lstlisting}[language=Python,caption={问题二两阶段随机线性规划的稀疏装配 model.py},label={lst:model},captionpos=t]
+# -*- coding: utf-8 -*-
+"""问题二两阶段随机线性规划的稀疏装配与求解。
+
+决策层：第 d 天 0:00 求解，第一阶段变量为对所有情景共享的计划购电量 G，
+第二阶段变量为逐情景的充放电、储电量、紧急购电量与弃置电量：
+
+    min  sum_t P_t G_t + sum_w pi_w sum_t 5 P_t E_wt
+    s.t. G_t + E_wt + R_wt + D_wt = L_wt + C_wt + W_wt          (能量平衡)
+         S_w,t+1 = S_wt + eta_c C_wt - D_wt / eta_d              (SOC 递推)
+         S_w,1 = S_start
+         C_wt <= max(0, R_wt - L_wt) + G_t                      (充电来源约束)
+         Smin <= S_wt <= Smax, 0 <= C_wt, D_wt <= e_bar
+         G, E, W >= 0
+
+执行层：固定决策层的 G，把当日实测负载与光伏代入同一组物理约束，
+以 min sum_t 5 P_t E_t 求解实际执行路径 C, D, S, E, W，即填报 result2 的量。
+执行层的 G 是常数，因此"负载优先"可以写成精确的上下界：
+
+    C_t <= max(0, R_t + G_t - L_t)        (缺口时段不得充电)
+    E_t <= max(0, L_t - R_t - G_t)        (富余时段不得紧急购电)
+
+两条合起来推出 C_t * E_t = 0，即不存在"一边紧急购电一边充电"的时段。
+
+**关于充电来源约束的动机。** 仅靠 G + E + R + D = L + C + W 一条平衡式，
+线性规划会允许"用紧急购电支持储能充电"：充电量 C 是情景特定变量，计划购电量
+G 是全情景共享变量，于是"在低价时段用该情景的紧急电充电、再到高价时段放电替代
+紧急购电"成为套利路径。Q2Project.md 的假设 3 曾认为 5P_t > P_t 会自动排除它，
+该判断不成立：跨时段比较的是"低价时段 5P"与"高价时段 5P"，而不是与同时刻的 P 比。
+上述约束把充电能力与共享的计划购电绑定，执行层再以精确上下界落实物理互斥。
+
+变量索引一律通过 `VariableLayout` 计算，避免分块顺序与索引映射错位。
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+from scipy.optimize import linprog
+from scipy.sparse import coo_matrix, csr_matrix
+
+SLOTS = 144
+SOLVER_OPTIONS = {"primal_feasibility_tolerance": 1e-10,
+                  "dual_feasibility_tolerance": 1e-10}
+RESIDUAL_TOL = 1e-6
+
+
+@dataclass(frozen=True)
+class ModelParams:
+    """问题二的物理与价格参数，默认值取自 notation.md 与附录 1。
+
+    `degeneracy_penalty` 是去退化项的单价（元/kWh），量级取 1e-6，比最低电价低六个
+    数量级。线性规划在"紧急购电总量相同"的前提下对充放电路径存在大量等价最优解，
+    不加该项时求解器可能返回"同时充放电"的退化解。该系数只用于在等价最优解中挑出
+    充放电动作最少的路径，不改变主成本与计划购电量。
+    """
+
+    price: np.ndarray
+    delta: float = 1.0 / 6.0
+    s_min: float = 1200.0
+    s_max: float = 10800.0
+    max_power_kw: float = 5000.0
+    eta_c: float = 0.9
+    eta_d: float = 0.9
+    emergency_multiplier: float = 5.0
+    degeneracy_penalty: float = 1e-6
+
+    @property
+    def max_energy(self) -> float:
+        return self.max_power_kw * self.delta
+
+    def __post_init__(self):
+        price = np.asarray(self.price, dtype=float)
+        if price.shape != (SLOTS,) or not np.isfinite(price).all() or (price <= 0).any():
+            raise ValueError("电价必须是 144 维严格正有限向量")
+        object.__setattr__(self, "price", price)
+
+
+@dataclass(frozen=True)
+class LinearProgram:
+    """装配好的线性规划，含等式块、不等式块、边界与变量布局。"""
+
+    c: np.ndarray
+    A_eq: csr_matrix
+    b_eq: np.ndarray
+    A_ub: csr_matrix
+    b_ub: np.ndarray
+    bounds: list
+    layout: object
+    kind: str
+
+    @property
+    def size(self) -> int:
+        return len(self.c)
+
+
+@dataclass(frozen=True)
+class VariableLayout:
+    """决策层变量分块与索引映射。
+
+    分块顺序为 [G(144), GC(144), C(K*144), D(K*144), S(K*145), E(K*144), W(K*144)]。
+    GC_t 是"计划购电中划给储能充电的份额"，也是第一阶段变量，因此对所有情景共享。
+    """
+
+    scenarios: int
+
+    @property
+    def n_G(self) -> int:
+        return SLOTS
+
+    @property
+    def offset_G(self) -> int:
+        return 0
+
+    @property
+    def offset_GC(self) -> int:
+        return self.n_G
+
+    @property
+    def offset_C(self) -> int:
+        return self.offset_GC + SLOTS
+
+    @property
+    def offset_D(self) -> int:
+        return self.offset_C + self.scenarios * SLOTS
+
+    @property
+    def offset_S(self) -> int:
+        return self.offset_D + self.scenarios * SLOTS
+
+    @property
+    def offset_E(self) -> int:
+        return self.offset_S + self.scenarios * (SLOTS + 1)
+
+    @property
+    def offset_W(self) -> int:
+        return self.offset_E + self.scenarios * SLOTS
+
+    @property
+    def size(self) -> int:
+        return self.offset_W + self.scenarios * SLOTS
+
+    def G(self, t: int) -> int:
+        return self.offset_G + t
+
+    def GC(self, t: int) -> int:
+        return self.offset_GC + t
+
+    def C(self, k: int, t: int) -> int:
+        return self.offset_C + k * SLOTS + t
+
+    def D(self, k: int, t: int) -> int:
+        return self.offset_D + k * SLOTS + t
+
+    def S(self, k: int, t: int) -> int:
+        return self.offset_S + k * (SLOTS + 1) + t
+
+    def E(self, k: int, t: int) -> int:
+        return self.offset_E + k * SLOTS + t
+
+    def W(self, k: int, t: int) -> int:
+        return self.offset_W + k * SLOTS + t
+
+
+@dataclass(frozen=True)
+class RecourseLayout:
+    """执行层变量分块：G 已定，其余同决策层单一情景。"""
+
+    @property
+    def size(self) -> int:
+        return 4 * SLOTS + SLOTS + 1
+
+    def C(self, t: int) -> int:
+        return t
+
+    def D(self, t: int) -> int:
+        return SLOTS + t
+
+    def S(self, t: int) -> int:
+        return 2 * SLOTS + t
+
+    def E(self, t: int) -> int:
+        return 3 * SLOTS + 1 + t
+
+    def W(self, t: int) -> int:
+        return 4 * SLOTS + 1 + t
+
+
+def validate_scenarios(load: np.ndarray, pv: np.ndarray, weights: np.ndarray) -> tuple:
+    """核验情景矩阵与权重形状、有限性与归一化。"""
+    load, pv, weights = (np.asarray(a, dtype=float) for a in (load, pv, weights))
+    if load.ndim != 2 or load.shape != pv.shape or load.shape[1] != SLOTS:
+        raise ValueError("情景负载与光伏必须是同形状的 (K,144) 矩阵")
+    if weights.shape != (len(load),):
+        raise ValueError("情景权重长度必须等于情景数")
+    if not (np.isfinite(load).all() and np.isfinite(pv).all() and np.isfinite(weights).all()):
+        raise ValueError("情景与权重必须为有限值")
+    if (load < 0).any() or (pv < 0).any() or (weights < 0).any():
+        raise ValueError("情景功率与权重必须非负")
+    if not np.isclose(weights.sum(), 1.0, rtol=0, atol=1e-12):
+        raise ValueError(f"情景权重必须归一化，当前和为 {weights.sum()!r}")
+    return load, pv, weights
+
+
+def build_decision_lp(params: ModelParams, load: np.ndarray, pv: np.ndarray,
+                      weights: np.ndarray, s_start: float) -> LinearProgram:
+    """装配第 d 天的两阶段随机线性规划。
+
+    充电来源用显式的一阶段份额 GC_t 表达：
+
+        C_wt <= max(0, R_wt - L_wt) + GC_t          (充电只能来自光伏富余与计划电份额)
+        GC_t <= G_t - Delta_t                       (计划电先覆盖期望净负荷缺口)
+        0 <= GC_t <= G_t
+
+    其中 Delta_t = sum_w pi_w max(0, L_wt - R_wt) 是该时段的期望净负荷缺口。
+    因为 GC_t 对所有情景共享，规划不能再"用某个情景自己的紧急购电去充电"，
+    紧急购电与充电的时段级互斥由此在决策层也得到保证。
+    """
+    load, pv, weights = validate_scenarios(load, pv, weights)
+    if not (params.s_min <= s_start <= params.s_max):
+        raise ValueError("日初储电量必须落在 [Smin, Smax] 内")
+    scenarios = len(load)
+    layout = VariableLayout(scenarios)
+    net = load - pv
+    deficit = np.maximum(0.0, load - pv)
+    expected_deficit = weights @ deficit
+    rows, cols, data = [], [], []
+    ub_rows, ub_cols, ub_data, ub_bound = [], [], [], []
+
+    def add(row, col, value):
+        rows.append(row)
+        cols.append(col)
+        data.append(value)
+
+    def add_ub(row, col, value):
+        ub_rows.append(row)
+        ub_cols.append(col)
+        ub_data.append(value)
+
+    # 目标：计划购电费 + 紧急购电费的经验期望 + 去退化项
+    c = np.zeros(layout.size)
+    c[:layout.n_G] = params.price
+    emergency_price = params.emergency_multiplier * params.price
+    for k in range(scenarios):
+        for t in range(SLOTS):
+            c[layout.E(k, t)] = weights[k] * emergency_price[t]
+            c[layout.C(k, t)] = weights[k] * params.degeneracy_penalty
+            c[layout.D(k, t)] = weights[k] * params.degeneracy_penalty
+
+    # 能量平衡：G + E + D - C - W = L - R
+    for k in range(scenarios):
+        for t in range(SLOTS):
+            row = k * SLOTS + t
+            add(row, layout.G(t), 1.0)
+            add(row, layout.E(k, t), 1.0)
+            add(row, layout.D(k, t), 1.0)
+            add(row, layout.C(k, t), -1.0)
+            add(row, layout.W(k, t), -1.0)
+    # SOC 递推：S_{t+1} - S_t - eta C + D / eta = 0
+    soc_offset = scenarios * SLOTS
+    for k in range(scenarios):
+        for t in range(SLOTS):
+            row = soc_offset + k * SLOTS + t
+            add(row, layout.S(k, t + 1), 1.0)
+            add(row, layout.S(k, t), -1.0)
+            add(row, layout.C(k, t), -params.eta_c)
+            add(row, layout.D(k, t), 1.0 / params.eta_d)
+    # 共同出发点
+    start_offset = 2 * scenarios * SLOTS
+    for k in range(scenarios):
+        add(start_offset + k, layout.S(k, 0), 1.0)
+    # 充电来源约束：C_wt - GC_t <= max(0, R_wt - L_wt)
+    for k in range(scenarios):
+        for t in range(SLOTS):
+            row = k * SLOTS + t
+            add_ub(row, layout.C(k, t), 1.0)
+            add_ub(row, layout.GC(t), -1.0)
+            ub_bound.append(max(0.0, pv[k, t] - load[k, t]))
+    # 计划电份额上限：GC_t - G_t <= -Delta_t，同时给出 G_t >= Delta_t
+    for t in range(SLOTS):
+        row = scenarios * SLOTS + t
+        add_ub(row, layout.GC(t), 1.0)
+        add_ub(row, layout.G(t), -1.0)
+        ub_bound.append(-float(expected_deficit[t]))
+
+    A_eq = coo_matrix((data, (rows, cols)),
+                      shape=(2 * scenarios * SLOTS + scenarios, layout.size)).tocsr()
+    b_eq = np.concatenate([net.ravel(),
+                           np.zeros(scenarios * SLOTS),
+                           np.full(scenarios, float(s_start))])
+    A_ub = coo_matrix((ub_data, (ub_rows, ub_cols)),
+                      shape=(scenarios * SLOTS + SLOTS, layout.size)).tocsr()
+    bounds = ([(0.0, None)] * (layout.n_G + SLOTS)
+              + [(0.0, params.max_energy)] * (2 * scenarios * SLOTS)
+              + [(params.s_min, params.s_max)] * (scenarios * (SLOTS + 1))
+              + [(0.0, None)] * (2 * scenarios * SLOTS))
+    return LinearProgram(c, A_eq, b_eq, A_ub, np.asarray(ub_bound), bounds, layout,
+                         "decision")
+
+
+def build_recourse_lp(params: ModelParams, plan: np.ndarray, load: np.ndarray,
+                      pv: np.ndarray, s_start: float) -> LinearProgram:
+    """固定计划购电量后的实际执行补救问题。"""
+    plan = np.asarray(plan, dtype=float)
+    load, pv = np.asarray(load, dtype=float), np.asarray(pv, dtype=float)
+    if plan.shape != (SLOTS,) or load.shape != (SLOTS,) or pv.shape != (SLOTS,):
+        raise ValueError("计划购电、负载与光伏都必须为 144 维")
+    if (plan < 0).any() or (load < 0).any() or (pv < 0).any():
+        raise ValueError("计划购电量、负载与光伏必须非负")
+    if not (params.s_min <= s_start <= params.s_max):
+        raise ValueError("日初储电量必须落在 [Smin, Smax] 内")
+    layout = RecourseLayout()
+    net = load - pv
+    rows, cols, data = [], [], []
+    ub_rows, ub_cols, ub_data, ub_bound = [], [], [], []
+
+    def add(row, col, value):
+        rows.append(row)
+        cols.append(col)
+        data.append(value)
+
+    def add_ub(row, col, value):
+        ub_rows.append(row)
+        ub_cols.append(col)
+        ub_data.append(value)
+
+    c = np.zeros(layout.size)
+    for t in range(SLOTS):
+        c[layout.E(t)] = params.emergency_multiplier * params.price[t]
+        c[layout.C(t)] = params.degeneracy_penalty
+        c[layout.D(t)] = params.degeneracy_penalty
+    # 能量平衡：E + D - C - W = L - R - G
+    for t in range(SLOTS):
+        add(t, layout.E(t), 1.0)
+        add(t, layout.D(t), 1.0)
+        add(t, layout.C(t), -1.0)
+        add(t, layout.W(t), -1.0)
+    for t in range(SLOTS):
+        row = SLOTS + t
+        add(row, layout.S(t + 1), 1.0)
+        add(row, layout.S(t), -1.0)
+        add(row, layout.C(t), -params.eta_c)
+        add(row, layout.D(t), 1.0 / params.eta_d)
+    add(2 * SLOTS, layout.S(0), 1.0)
+    # 负载优先：A_t = R_t + G_t - L_t 为常数
+    surplus = np.maximum(0.0, pv + plan - load)
+    deficit = np.maximum(0.0, load - pv - plan)
+    for t in range(SLOTS):
+        add_ub(t, layout.C(t), 1.0)
+        ub_bound.append(float(surplus[t]))
+    for t in range(SLOTS):
+        add_ub(SLOTS + t, layout.E(t), 1.0)
+        ub_bound.append(float(deficit[t]))
+
+    A_eq = coo_matrix((data, (rows, cols)), shape=(2 * SLOTS + 1, layout.size)).tocsr()
+    b_eq = np.concatenate([net - plan, np.zeros(SLOTS), [float(s_start)]])
+    A_ub = coo_matrix((ub_data, (ub_rows, ub_cols)),
+                      shape=(2 * SLOTS, layout.size)).tocsr()
+    bounds = ([(0.0, params.max_energy)] * (2 * SLOTS)
+              + [(params.s_min, params.s_max)] * (SLOTS + 1)
+              + [(0.0, None)] * (2 * SLOTS))
+    return LinearProgram(c, A_eq, b_eq, A_ub, np.asarray(ub_bound), bounds, layout,
+                         "recourse")
+
+
+def solve(program: LinearProgram, tag: str):
+    """调用 SciPy 的 HiGHS 接口求解，非最优直接报错而不静默返回。"""
+    result = linprog(program.c, A_ub=program.A_ub, b_ub=program.b_ub,
+                     A_eq=program.A_eq, b_eq=program.b_eq, bounds=program.bounds,
+                     method="highs", options=SOLVER_OPTIONS)
+    if not result.success or result.status != 0:
+        raise RuntimeError(f"{tag} 未达到最优状态：{result.message}")
+    if not np.isfinite(result.x).all():
+        raise RuntimeError(f"{tag} 的解包含非有限值")
+    return result
+
+
+def unpack_decision(result, layout: VariableLayout, scenarios: int) -> dict:
+    """按布局拆解决策层解向量，返回逐情景数组与第一阶段计划。"""
+    x = result.x
+    G = x[layout.offset_G:layout.offset_G + layout.n_G]
+    shape = (scenarios, SLOTS)
+    return {
+        "G": G,
+        "GC": x[layout.offset_GC:layout.offset_GC + SLOTS],
+        "C": x[layout.offset_C:layout.offset_C + scenarios * SLOTS].reshape(shape),
+        "D": x[layout.offset_D:layout.offset_D + scenarios * SLOTS].reshape(shape),
+        "S": x[layout.offset_S:layout.offset_S + scenarios * (SLOTS + 1)].reshape(
+            (scenarios, SLOTS + 1)),
+        "E": x[layout.offset_E:layout.offset_E + scenarios * SLOTS].reshape(shape),
+        "W": x[layout.offset_W:layout.offset_W + scenarios * SLOTS].reshape(shape),
+        "objective": float(result.fun),
+    }
+
+
+def unpack_recourse(result, layout: RecourseLayout) -> dict:
+    """按布局拆解执行层解向量。"""
+    x = result.x
+    return {"C": x[:SLOTS], "D": x[SLOTS:2 * SLOTS], "S": x[2 * SLOTS:3 * SLOTS + 1],
+            "E": x[3 * SLOTS + 1:4 * SLOTS + 1], "W": x[4 * SLOTS + 1:5 * SLOTS + 1],
+            "objective": float(result.fun)}
+\end{lstlisting}
+
+\subsection*{调度优化层 dispatch.py}
+
+该模块给出规划层的两阶段随机线性规划与执行层的确定性调度，对应问题三中对模型预测控制的两种求解口径。
+
+\begin{lstlisting}[language=Python,caption={调度优化层 dispatch.py},label={lst:dispatch},captionpos=t]
+"""调度优化层（对齐 problem3_solving_final.md 式 16-29）。
+
+- 规划层 solve_planning：两阶段 wait-and-see 随机 LP，单 W 能量平衡。
+- 执行层 solve_dispatch：确定性单情景 LP/MILP，式 23 充放电/紧急购电互斥。
+"""
+import numpy as np
+
+import myh.src.config as config
+from myh.src.lp import Model
+
+INF = np.inf
+
+
+def solve_dispatch(load, pv, price, s0, G_fixed=None, s_end=None,
+                   term_a=None, term_b=None, mutex=False):
+    """执行层确定性调度（式 22-23）。单 W 平衡，可选当前区间互斥二元 z,y。"""
+    H = len(load)
+    m = Model()
+    free_G = G_fixed is None
+
+    G = [m.var(f"G_{i}", lb=0.0, obj=0.0 if not free_G else price[i])
+         for i in range(H)]
+    C = [m.var(f"C_{i}", lb=0.0, ub=config.E_BAR) for i in range(H)]
+    D = [m.var(f"D_{i}", lb=0.0, ub=config.E_BAR) for i in range(H)]
+    E = [m.var(f"E_{i}", lb=0.0, obj=config.EMERGENCY_MULT * price[i]) for i in range(H)]
+    W = [m.var(f"W_{i}", lb=0.0) for i in range(H)]
+    S = [m.var(f"S_{i}", lb=config.S_MIN, ub=config.S_MAX) for i in range(H + 1)]
+    theta = m.var("theta", lb=0.0, obj=1.0) if term_a is not None else None
+
+    if mutex and H > 0:
+        z = m.var("z", lb=0.0, ub=1.0, integer=True)
+        y = m.var("y", lb=0.0, ub=1.0, integer=True)
+        m.add({C[0]: 1.0, z: -config.E_BAR}, 'le', 0.0)
+        m.add({D[0]: 1.0, z: config.E_BAR}, 'le', config.E_BAR)
+        m.add({E[0]: 1.0, y: -load[0]}, 'le', 0.0)
+        m.add({C[0]: 1.0, y: config.E_BAR}, 'le', config.E_BAR)
+
+    m.add({S[0]: 1.0}, 'eq', s0)
+    if s_end is not None:
+        m.add({S[H]: 1.0}, 'eq', s_end)
+    if term_a is not None:
+        for q in range(len(term_a)):
+            m.add({theta: 1.0, S[H]: -term_a[q]}, 'ge', term_b[q])
+
+    for i in range(H):
+        terms = {E[i]: 1.0, D[i]: 1.0, C[i]: -1.0, W[i]: -1.0}
+        rhs = load[i] - pv[i]
+        if free_G:
+            terms[G[i]] = 1.0
+        else:
+            rhs -= G_fixed[i]
+        m.add(terms, 'eq', rhs)
+        m.add({S[i + 1]: 1.0, S[i]: -1.0, C[i]: -config.ETA_C,
+               D[i]: 1.0 / config.ETA_D}, 'eq', 0.0)
+
+    status, msg, x = m.solve()
+    if status != 'ok':
+        return {"status": status, "message": msg}
+    Cv = np.array([x[c] for c in C])
+    Dv = np.array([x[d] for d in D])
+    Ev = np.array([x[e] for e in E])
+    Wv = np.array([x[w] for w in W])
+    Sv = np.array([x[s] for s in S])
+    Gv = np.array([x[g] for g in G]) if free_G else np.asarray(G_fixed, float)
+    obj = float(np.sum(price * Gv + config.EMERGENCY_MULT * price * Ev))
+    if theta is not None:
+        obj += float(x[theta])
+    return {"status": "ok", "C": Cv, "D": Dv, "E": Ev, "W": Wv, "S": Sv,
+            "G": Gv, "obj": obj}
+
+
+def solve_planning(L, R, p, probs, s0, G0=None, term_a=None, term_b=None,
+                   use_cvar=False, alpha=0.95, lam=0.0, g_floor_q=None):
+    """两阶段随机 LP（式 16/21/27/29）。
+
+    L/R/p: (n_scen, H) 情景负载/光伏/电价；probs: (n_scen,) 等权。
+    第一阶段 G（here-and-now）、A（调整量）全情景共用；第二阶段 C/D/E/W/S/θ 按情景。
+    """
+    L, R, p = [np.asarray(x, float) for x in (L, R, p)]
+    probs = np.asarray(probs, float)
+    N, H = L.shape
+
+    # 合并完全重复情景（同一历史块副本）：概率相加，分布不变。
+    if N > 1:
+        stacked = np.concatenate([L, R, p], axis=1)
+        uniq, first_idx, inverse = np.unique(stacked, axis=0,
+                                             return_index=True, return_inverse=True)
+        if uniq.shape[0] < N:
+            L, R, p = L[first_idx], R[first_idx], p[first_idx]
+            probs = np.bincount(inverse, weights=probs)
+            N, H = L.shape
+
+    pbar = probs @ p
+    has_adj = G0 is not None
+    scale = (1.0 - lam) if use_cvar else 1.0
+
+    # 报童下界：G 不得低于情景净负荷的 g_floor_q 分位（对冲 wait-and-see 乐观偏差）
+    net_floor = None
+    if g_floor_q is not None:
+        net_floor = np.maximum(0.0, np.quantile(L - R, g_floor_q, axis=0))
+
+    m = Model()
+    G = [m.var(f"G_{i}", lb=0.0 if net_floor is None else net_floor[i],
+               obj=scale * pbar[i]) for i in range(H)]
+    A = [m.var(f"A_{i}", lb=0.0,
+               obj=scale * 0.5 * pbar[i] if has_adj else 0.0) for i in range(H)]
+
+    C = [[None] * H for _ in range(N)]
+    D = [[None] * H for _ in range(N)]
+    E = [[None] * H for _ in range(N)]
+    W = [[None] * H for _ in range(N)]
+    S = [[None] * (H + 1) for _ in range(N)]
+    theta = [None] * N
+
+    for w in range(N):
+        pw = probs[w]
+        for i in range(H):
+            C[w][i] = m.var(f"C_{w}_{i}", lb=0.0, ub=config.E_BAR)
+            D[w][i] = m.var(f"D_{w}_{i}", lb=0.0, ub=config.E_BAR)
+            E[w][i] = m.var(f"E_{w}_{i}", lb=0.0,
+                            obj=scale * pw * config.EMERGENCY_MULT * p[w, i])
+            W[w][i] = m.var(f"W_{w}_{i}", lb=0.0)
+        for i in range(H + 1):
+            S[w][i] = m.var(f"S_{w}_{i}", lb=config.S_MIN, ub=config.S_MAX)
+        theta[w] = m.var(f"theta_{w}", lb=0.0, obj=scale * pw)
+
+        m.add({S[w][0]: 1.0}, 'eq', s0)
+        if term_a is not None:
+            for q in range(len(term_a)):
+                m.add({theta[w]: 1.0, S[w][H]: -term_a[q]}, 'ge', term_b[q])
+        for i in range(H):
+            # 式 16 单 W 能量平衡
+            m.add({G[i]: 1.0, E[w][i]: 1.0, D[w][i]: 1.0,
+                   C[w][i]: -1.0, W[w][i]: -1.0}, 'eq', L[w, i] - R[w, i])
+            m.add({S[w][i + 1]: 1.0, S[w][i]: -1.0,
+                   C[w][i]: -config.ETA_C, D[w][i]: 1.0 / config.ETA_D}, 'eq', 0.0)
+
+    if has_adj:
+        for i in range(H):
+            m.add({A[i]: 1.0, G[i]: -1.0}, 'ge', -G0[i])
+            m.add({A[i]: 1.0, G[i]: 1.0}, 'ge', G0[i])
+
+    if use_cvar:
+        zeta = m.var("zeta", lb=-INF, obj=lam)
+        u = [m.var(f"u_{w}", lb=0.0, obj=lam * probs[w] / (1.0 - alpha))
+             for w in range(N)]
+        for w in range(N):
+            terms = {u[w]: 1.0, zeta: 1.0, theta[w]: -1.0}
+            for i in range(H):
+                terms[f"G_{i}"] = -p[w, i]
+                if has_adj:
+                    terms[f"A_{i}"] = -0.5 * p[w, i]
+                terms[f"E_{w}_{i}"] = -config.EMERGENCY_MULT * p[w, i]
+            m.add(terms, 'ge', 0.0)
+
+    status, msg, x = m.solve()
+    if status != 'ok':
+        return {"status": status, "message": msg}
+
+    Gv = np.array([x[g] for g in G])
+    Av = np.array([x[a] for a in A])
+    Eemg = sum(probs[w] * config.EMERGENCY_MULT *
+               float(np.sum(p[w] * np.array([x[e] for e in E[w]])))
+               for w in range(N))
+    Eadj = 0.5 * float(np.sum(pbar * Av)) if has_adj else 0.0
+    obj = float(np.sum(pbar * Gv)) + Eemg + Eadj
+    return {"status": "ok", "G": Gv, "A": Av, "obj": obj}
+
+
+def solve_mpc(L, R, p, probs, s0, G_fixed, term_a=None, term_b=None, mutex=True):
+    """执行层情景 MPC：当前区间 here-and-now（全情景共用），未来 wait-and-see。
+
+    L/R/p: (n_scen, H)。当前区间 t=0 的 C/D/E/W 全情景共用（可实施动作）；
+    t>0 按情景自由补救。G_fixed 为已提交、不可改的购电计划。mutex 施加式 23 互斥。
+    """
+    L, R, p = [np.asarray(x, float) for x in (L, R, p)]
+    probs = np.asarray(probs, float)
+    N, H = L.shape
+
+    # 合并完全重复情景
+    if N > 1:
+        stacked = np.concatenate([L, R, p], axis=1)
+        uniq, first_idx, inverse = np.unique(stacked, axis=0,
+                                             return_index=True, return_inverse=True)
+        if uniq.shape[0] < N:
+            L, R, p = L[first_idx], R[first_idx], p[first_idx]
+            probs = np.bincount(inverse, weights=probs)
+            N, H = L.shape
+
+    m = Model()
+
+    # 当前区间（here-and-now，全情景共用）
+    C0 = m.var("C0", lb=0.0, ub=config.E_BAR)
+    D0 = m.var("D0", lb=0.0, ub=config.E_BAR)
+    E0 = m.var("E0", lb=0.0,
+               obj=config.EMERGENCY_MULT * float(np.sum(probs * p[:, 0])))
+    W0 = m.var("W0", lb=0.0)
+
+    # 未来区间（wait-and-see）
+    C = [[None] * H for _ in range(N)]
+    D = [[None] * H for _ in range(N)]
+    E = [[None] * H for _ in range(N)]
+    W = [[None] * H for _ in range(N)]
+    S = [[None] * (H + 1) for _ in range(N)]
+    theta = [None] * N
+
+    for w in range(N):
+        pw = probs[w]
+        for t in range(1, H):
+            C[w][t] = m.var(f"C_{w}_{t}", lb=0.0, ub=config.E_BAR)
+            D[w][t] = m.var(f"D_{w}_{t}", lb=0.0, ub=config.E_BAR)
+            E[w][t] = m.var(f"E_{w}_{t}", lb=0.0,
+                            obj=pw * config.EMERGENCY_MULT * p[w, t])
+            W[w][t] = m.var(f"W_{w}_{t}", lb=0.0)
+        for t in range(H + 1):
+            S[w][t] = m.var(f"S_{w}_{t}", lb=config.S_MIN, ub=config.S_MAX)
+        theta[w] = m.var(f"theta_{w}", lb=0.0, obj=pw)
+
+        m.add({S[w][0]: 1.0}, 'eq', s0)
+        if term_a is not None:
+            for q in range(len(term_a)):
+                m.add({theta[w]: 1.0, S[w][H]: -term_a[q]}, 'ge', term_b[q])
+
+        # t=0 平衡（当前区间 L/R 为实测，全情景相同，用情景 0 代表）
+        m.add({E0: 1.0, D0: 1.0, C0: -1.0, W0: -1.0}, 'eq',
+              L[0, 0] - R[0, 0] - G_fixed[0])
+        m.add({S[w][1]: 1.0, S[w][0]: -1.0, C0: -config.ETA_C,
+               D0: 1.0 / config.ETA_D}, 'eq', 0.0)
+
+        for t in range(1, H):
+            m.add({E[w][t]: 1.0, D[w][t]: 1.0, C[w][t]: -1.0, W[w][t]: -1.0},
+                  'eq', L[w, t] - R[w, t] - G_fixed[t])
+            m.add({S[w][t + 1]: 1.0, S[w][t]: -1.0, C[w][t]: -config.ETA_C,
+                   D[w][t]: 1.0 / config.ETA_D}, 'eq', 0.0)
+
+    # 式 23：当前区间互斥（z 充放电、y 紧急购电不充电）
+    if mutex:
+        z = m.var("z", lb=0.0, ub=1.0, integer=True)
+        y = m.var("y", lb=0.0, ub=1.0, integer=True)
+        m.add({C0: 1.0, z: -config.E_BAR}, 'le', 0.0)
+        m.add({D0: 1.0, z: config.E_BAR}, 'le', config.E_BAR)
+        m.add({E0: 1.0, y: -L[0, 0]}, 'le', 0.0)
+        m.add({C0: 1.0, y: config.E_BAR}, 'le', config.E_BAR)
+
+    status, msg, x = m.solve()
+    if status != 'ok':
+        return {"status": status, "message": msg}
+
+    Cv = np.empty(H)
+    Dv = np.empty(H)
+    Ev = np.empty(H)
+    Wv = np.empty(H)
+    Cv[0], Dv[0], Ev[0], Wv[0] = x[C0], x[D0], x[E0], x[W0]
+    for t in range(1, H):
+        Cv[t] = x[C[0][t]]
+        Dv[t] = x[D[0][t]]
+        Ev[t] = x[E[0][t]]
+        Wv[t] = x[W[0][t]]
+    obj = float(np.sum(probs * np.array([
+        config.EMERGENCY_MULT * (p[w, 0] * x[E0] +
+                                 np.sum(p[w, 1:] * np.array([x[E[w][t]] for t in range(1, H)])))
+        + x[theta[w]] for w in range(N)])))
+    return {"status": "ok", "C": Cv, "D": Dv, "E": Ev, "W": Wv,
+            "S": np.array([x[s] for s in S[0]]), "obj": obj}
+\end{lstlisting}
+
+\end{appendices}

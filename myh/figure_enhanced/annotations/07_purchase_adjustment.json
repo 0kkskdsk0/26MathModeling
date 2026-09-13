@@ -1,0 +1,47 @@
+{
+  "size_inches": [
+    9,
+    9.700000000000001
+  ],
+  "annotations": [
+    {
+      "text": "(a) 问题三 M3",
+      "x": 0.12,
+      "y": 0.8721649484536083,
+      "fontsize": 11,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "(b) 问题四 C3",
+      "x": 0.12,
+      "y": 0.4262886597938145,
+      "fontsize": 11,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    }
+  ],
+  "protected_rectangles": [
+    [
+      0.12,
+      0.518041237113402,
+      0.86,
+      0.8041237113402062
+    ],
+    [
+      0.12,
+      0.07216494845360825,
+      0.86,
+      0.3582474226804124
+    ]
+  ],
+  "instructions": "独立后期标注层。x/y 为从画布左下角起算的归一化坐标；修改后单独运行 compose_annotations.py。"
+}

@@ -1,0 +1,107 @@
+{
+  "size_inches": [
+    9,
+    9.700000000000001
+  ],
+  "annotations": [
+    {
+      "text": "(a) 相对配置 C 的结算费用变化",
+      "x": 0.24,
+      "y": 0.8721649484536083,
+      "fontsize": 11,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "+19.5%  (+306.6 万元)",
+      "x": 0.7196557707944884,
+      "y": 0.7261012183692596,
+      "fontsize": 10.0,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "center",
+      "rotation": 0.0,
+      "kind": "data_label"
+    },
+    {
+      "text": "-6.7%  (-105.4 万元)",
+      "x": 0.41535097280121436,
+      "y": 0.5960637300843487,
+      "fontsize": 10.0,
+      "color": "black",
+      "weight": "normal",
+      "ha": "right",
+      "va": "center",
+      "rotation": 0.0,
+      "kind": "data_label"
+    },
+    {
+      "text": "(b) 相对配置 C 的紧急购电量变化",
+      "x": 0.24,
+      "y": 0.4262886597938145,
+      "fontsize": 11,
+      "color": "black",
+      "weight": "normal",
+      "ha": "left",
+      "va": "bottom",
+      "rotation": 0.0,
+      "kind": "outside"
+    },
+    {
+      "text": "-77.9%  (-21.7 万 kWh)",
+      "x": 0.4328848877980686,
+      "y": 0.28022492970946583,
+      "fontsize": 10.0,
+      "color": "black",
+      "weight": "normal",
+      "ha": "right",
+      "va": "center",
+      "rotation": 0.0,
+      "kind": "data_label"
+    },
+    {
+      "text": "-33.1%  (-9.2 万 kWh)",
+      "x": 0.5964965015554644,
+      "y": 0.15018744142455484,
+      "fontsize": 10.0,
+      "color": "black",
+      "weight": "normal",
+      "ha": "right",
+      "va": "center",
+      "rotation": 0.0,
+      "kind": "data_label"
+    }
+  ],
+  "protected_rectangles": [
+    [
+      0.6995940423994267,
+      0.7218056857232116,
+      0.708853301658686,
+      0.7303967510153078
+    ],
+    [
+      0.4261534419370168,
+      0.5917681974383006,
+      0.43541270119627606,
+      0.6003592627303967
+    ],
+    [
+      0.44368735693387107,
+      0.2759293970634177,
+      0.45294661619313037,
+      0.2845204623555139
+    ],
+    [
+      0.6072989706912668,
+      0.14589190877850675,
+      0.6165582299505261,
+      0.15448297407060294
+    ]
+  ],
+  "instructions": "独立后期标注层。x/y 为从画布左下角起算的归一化坐标；修改后单独运行 compose_annotations.py。"
+}
