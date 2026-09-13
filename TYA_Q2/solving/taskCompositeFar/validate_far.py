@@ -38,40 +38,68 @@ from taskComposite.validate import (COST_TOL, SLOTS, TOL, assert_day,  # noqa: E
                                     summary)
 
 TERMINAL_TOL = 1e-6
+TERMINAL_ABS_TOL = 1e-4      # 元
+TERMINAL_REL_TOL = 1e-6      # 相对于 max(1, max|theta|)
+
+
+def terminal_tolerance(theta) -> float:
+    """C13/C14 的混合容差：`max(绝对容差, 相对容差 × max(1, max|θ|))`。
+
+    $\\theta$ 的量级是数万元，而 HiGHS 的可行性容差是绝对的 $10^{-10}$，
+    直接用绝对容差会把求解器精度放大后的正常残差误判为违规；直接用相对容差又会在
+    $\\theta$ 很小时过严。混合容差在两端都合理：以 $\\theta\\sim5\\times10^4$ 元计，
+    允许的绝对残差是 $5\\times10^{-2}$ 元，对应每天约 $0.05$ 元的影响，
+    比终端价值本身的估计精度（$\\tau_{\\mathrm{env}}=15$ 元）小三个数量级。
+    """
+    theta = np.asarray(theta, dtype=float)
+    scale = float(max(1.0, np.abs(theta).max())) if theta.size else 1.0
+    return max(TERMINAL_ABS_TOL, TERMINAL_REL_TOL * scale)
 
 
 def check_terminal_value(solution: dict, tangents, scenarios: int) -> dict:
-    """C13、C14：终端价值约束的支撑残差与取包络残差。"""
+    """C13、C14：终端价值约束的支撑残差与取包络残差。
+
+    判定用混合容差（见 `terminal_tolerance`）；绝对残差与相对残差同时如实报告，
+    不隐藏任何一项。返回字段刻意避开 `_count`、`_abs` 等 `assert_day` 会当作
+    "越界量"的后缀，以免 $\\theta$ 的正常量级（数万元）被误判为违规。
+    """
     coefficients = model_far.normalise_tangents(tangents)
     if len(coefficients) == 0:
         return {"terminal_support_violation": 0.0, "terminal_envelope_gap": 0.0,
-                "terminal_tangent_count": 0, "terminal_theta_max": 0.0,
-                "terminal_theta_min": 0.0, "passed": True}
+                "terminal_support_rel": 0.0, "terminal_envelope_rel": 0.0,
+                "terminal_theta_mean": 0.0, "passed": True}
     record = model_far.terminal_value_residual(solution, coefficients, scenarios)
     theta = np.asarray(solution["theta"], dtype=float)
-    record = {
+    scale = float(max(1.0, np.abs(theta).max())) if theta.size else 1.0
+    tolerance = terminal_tolerance(theta)
+    gap = float(max(0.0, record["terminal_objective_gap"]))
+    out = {
         "terminal_support_violation": record["terminal_support_violation"],
-        "terminal_envelope_gap": float(max(0.0, record["terminal_objective_gap"])),
-        "terminal_tangent_count": record["tangent_count"],
-        "terminal_theta_max": float(theta.max()) if theta.size else 0.0,
-        "terminal_theta_min": float(theta.min()) if theta.size else 0.0,
+        "terminal_envelope_gap": gap,
+        "terminal_support_rel": record["terminal_support_violation"] / scale,
+        "terminal_envelope_rel": gap / scale,
+        "terminal_theta_mean": float(theta.mean()) if theta.size else 0.0,
     }
-    record["passed"] = bool(record["terminal_support_violation"] <= TERMINAL_TOL
-                            and record["terminal_envelope_gap"] <= TERMINAL_TOL)
-    return record
+    out["passed"] = bool(record["terminal_support_violation"] <= tolerance
+                         and gap <= tolerance)
+    return out
 
 
 def check_tangents(tangents) -> dict:
-    """C15、C16：切线斜率的符号与单调性。"""
+    """C15、C16：切线斜率的符号与单调性。
+
+    单调性检查作用在**输入的 $q$ 顺序**上：$a_{d,q}\\le0$ 且随 $q$ 单调不减。
+    装配前的 `normalise_tangents` 会按斜率重排，因此这里必须先于排序检查。
+    """
     coefficients = np.asarray(tangents, dtype=float).reshape((-1, 2))
     if len(coefficients) == 0:
         return {"tangent_positive_violation": 0.0, "tangent_monotone_violation": 0.0,
                 "passed": True}
-    ordered = coefficients[np.argsort(coefficients[:, 0], kind="stable")]
+    differences = np.diff(coefficients[:, 0]) if len(coefficients) > 1 else np.zeros(0)
     record = {
-        "tangent_positive_violation": float(max(0.0, ordered[:, 0].max())),
-        "tangent_monotone_violation": float(max(0.0, np.diff(ordered[:, 0]).max()))
-        if len(ordered) > 1 else 0.0,
+        "tangent_positive_violation": float(max(0.0, coefficients[:, 0].max())),
+        "tangent_monotone_violation": float(max(0.0, -differences.min()))
+        if len(differences) else 0.0,
     }
     record["passed"] = bool(record["tangent_positive_violation"] <= TERMINAL_TOL
                             and record["tangent_monotone_violation"] <= TERMINAL_TOL)
@@ -87,7 +115,7 @@ def check_value_shape(values: np.ndarray, slopes: np.ndarray) -> dict:
                 "passed": True}
     monotone = float(max(0.0, np.diff(values).max()))
     interior = np.diff(slopes[:-1]) if len(slopes) > 2 else np.zeros(0)
-    convexity = float(max(0.0, interior.max())) if len(interior) else 0.0
+    convexity = float(max(0.0, -interior.min())) if len(interior) else 0.0
     record = {"value_monotone_violation": monotone,
               "value_convexity_violation": convexity}
     record["passed"] = bool(monotone <= TERMINAL_TOL and convexity <= TERMINAL_TOL)
@@ -151,6 +179,6 @@ def assert_far(record: dict, label: str) -> None:
     if record.get("passed"):
         return
     failed = {k: v for k, v in record.items()
-              if k != "passed" and ((isinstance(v, float) and abs(v) > TERMINAL_TOL)
-                                    or (isinstance(v, bool) and v is False))}
+              if k != "passed" and isinstance(v, float)
+              and k.endswith(("_rel", "_violation", "_gap"))}
     raise AssertionError(f"{label} 远视核验未通过：{failed}")

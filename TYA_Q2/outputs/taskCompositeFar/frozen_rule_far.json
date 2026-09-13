@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "pre_registered_before_reading_results": true,
+  "registered_at": "2026-09-13T06:40:01",
+  "inherits_near_rule": {
+    "final_groups": [
+      "season",
+      "net_lag_7d",
+      "pv_mean_3d",
+      "load_lag_7d",
+      "net_mean_7d",
+      "low_load_day"
+    ],
+    "revised_bandwidth": 1.0438414641946645,
+    "season_month_radius": 1,
+    "warmup_days": 7,
+    "pool_rule": "same season (month ring distance <= 1) and j < d",
+    "source": "outputs/taskComposite/frozen_rule.json（未作任何重新挑选）"
+  },
+  "terminal_value": {
+    "definition": "V_{d+1}(s) = 以储能 s 开局、在第 d 天已知的 (Omega_d, pi_{d,omega}) 下单日近视问题的最小期望费用",
+    "truncation": "rolling_horizon_one_step_lookahead_with_myopic_tail",
+    "tail_rule": "V_{d+1} 的尾部仍取近视，不含更远的终端价值；递归不窥见未来",
+    "expectation_source": "同一组 (Omega_d, pi_{d,omega})，与主模型逐元素一致",
+    "subgradient_source": "共同出发点约束 S^omega_{d,1}=s 的对偶变量之和",
+    "sign_convention": "费用函数，关于 s 单调不增且凸；a_q <= 0 且随 q 单调不减",
+    "cold_start_rule": "2025-01-01 至 01-31 取 theta ≡ 0，保证 02-01 日初储电量与近视模型逐元素一致",
+    "state_interval_kwh": [
+      1200.0,
+      10800.0
+    ]
+  },
+  "grid": {
+    "n0": 5,
+    "r_max": 5,
+    "refinement": "midpoint_bisection_keeping_previous_points",
+    "grid_points_per_round": [
+      5,
+      9,
+      17,
+      33,
+      65,
+      129
+    ],
+    "probe_points": 20001,
+    "fingerprint_eps_a_yuan_per_kwh": 1e-08,
+    "fingerprint_eps_b_yuan": 1e-06,
+    "active_tolerance_yuan": 1e-06,
+    "tangent_rule": "每个采样点一条切线，不取区间端点中较紧者"
+  },
+  "convergence": {
+    "criterion_A": "max_k |Vhat_r(s_{k+1}) - Vhat_r(s_k)| <= eta",
+    "eta_yuan": 150.0,
+    "criterion_B": "max_s [Vhat_{r+1}(s) - Vhat_r(s)] <= tau_env",
+    "criterion_B_note": "对严格凸价值函数，集合论意义的'无新切线'永不成立，故操作化为'再加密一轮不再在容差之外抬高逼近包络'；严格的集合差仍逐日落盘，不被掩盖",
+    "tau_env_yuan": 15.0,
+    "calibration": "阈值由 value_function.py --calibrate 在 12 个代表日上跑满轮数上限确定（value_function_calibration.json）；标定过程不接触任何远视/近视对照结果（对照结果在 solve_year_far.py 中才产生）"
+  },
+  "value_function_update": {
+    "policy": "per_day_recompute",
+    "detail": "每一天的切线集合都在该日 0:00 用 (Omega_d, pi_{d,omega}) 重新采样、重新求次梯度、重新判定收敛，不沿用前一日的切线",
+    "reuse_within_day": "同一日内保留已算过的网格点，只对新增中点求解"
+  },
+  "adoption_rule": {
+    "metric": "C_official = sum_d sum_t (P_t G_{d,t} + 5 P_t E_{d,t})",
+    "denominator": "远视模型的 C_official（沿用 Q2Project.md 原表述，不更换评分口径）",
+    "threshold_pct": 0.5,
+    "rule": "相对节省 >= threshold_pct 时采纳远视，否则保留近视并如实记录负结果；阈值不因结果回调"
+  },
+  "declared_budget": {
+    "value_function_linear_programs": "334 天 x 最多 129 点，预计约 2.2 万次决策层 LP",
+    "rolling_linear_programs": "365 天 x (1 次远视决策层 + 1 次执行层)",
+    "degeneracy_linear_programs": "334 天 x 1 次（全零切线）",
+    "causality_linear_programs": "1 天 x (129 点采样 + 2 次决策层)",
+    "workers": "16（value_function）/ 8（退化核验）"
+  },
+  "source_files": {
+    "price": "ProblemC/附件/附件1.xlsx",
+    "data": "ProblemC/附件/附件2.xlsx",
+    "near_results": "TYA_Q2/outputs/taskComposite/",
+    "far_results": "TYA_Q2/outputs/taskCompositeFar/"
+  },
+  "final_tangent_set": {
+    "storage": "outputs/taskCompositeFar/value_function_samples.npz 的 tangents 数组",
+    "count_per_day_min": 5,
+    "count_per_day_max": 65,
+    "count_per_day_total": 15612
+  },
+  "convergence_result": {
+    "days": 334,
+    "days_converged": 334,
+    "max_rounds_used": 6,
+    "max_grid_points": 129,
+    "not_converged_dates": []
+  },
+  "adoption_decision": {
+    "total_cost_near_yuan": 16998505.68826,
+    "total_cost_far_yuan": 17036556.628,
+    "relative_saving_pct": -0.22334877035809442,
+    "threshold_pct": 0.5,
+    "decision": "保留近视模型",
+    "adopted": false
+  },
+  "verification": {
+    "degeneracy_passed": true,
+    "degeneracy_days": 334,
+    "degeneracy_max_abs_plan_difference_kwh": 4.992150479665725e-07,
+    "causality_passed": true,
+    "causality_date": "2025-06-21",
+    "days_all_assertions_passed": 365
+  }
+}

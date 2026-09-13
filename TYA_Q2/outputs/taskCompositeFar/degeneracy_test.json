@@ -1,0 +1,11 @@
+{
+  "days_compared": 334,
+  "days_mismatched": 0,
+  "mismatch_dates": [],
+  "max_abs_plan_difference_kwh": 4.992150479665725e-07,
+  "max_relative_plan_difference": 4.863724878712693e-10,
+  "max_abs_theta_kwh": 0.0,
+  "max_assembly_gap": 0.0,
+  "tolerance_kwh": 1e-06,
+  "passed": true
+}

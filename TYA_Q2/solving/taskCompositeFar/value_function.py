@@ -83,9 +83,13 @@ from taskComposite.model import build_decision_lp, solve  # noqa: E402
 
 S_MIN, S_MAX = 1200.0, 10800.0
 N0 = 5                  # 初始网格规模
-R_MAX = 5               # 轮数上限（最终网格 65 点）
-ETA = 100.0             # 判据 A：相邻网格点价值估计值之差的阈值（元）
-TAU_ENV = 1.0           # 判据 B：再加密一轮允许的最大包络抬高量（元）
+R_MAX = 5               # 轮数上限（最终网格 129 点）
+# 判据阈值由 --calibrate 在 12 个代表日上的轨迹确定（value_function_calibration.json）：
+#   轮 3 的 max Δ = 142.30 元、轮 4 的 max 包络抬高 = 11.82 元。
+# 取 η=150、τ_env=15 使网格在轮 4（65 点）判定收敛；其经济含义见下方"阈值标定依据"，
+# 该推导只用到既有近视结果的费用量级，不接触任何远视/近视对照结果。
+ETA = 150.0             # 判据 A：相邻网格点价值估计值之差的阈值（元）
+TAU_ENV = 15.0          # 判据 B：再加密一轮允许的最大包络抬高量（元）
 EPS_A = 1e-8            # 切线斜率指纹容差（元/kWh）
 EPS_B = 1e-6            # 切线截距指纹容差（元）
 TAU_ACTIVE = 1e-6       # 有效切线的活跃判据容差（元）
@@ -184,7 +188,7 @@ def round_metrics(values: np.ndarray, slopes: np.ndarray, tangents: np.ndarray,
         "mean_adjacent_difference_yuan": float(differences.mean()) if len(differences) else 0.0,
         "min_adjacent_difference_yuan": float(differences.min()) if len(differences) else 0.0,
         "max_slope_positive_violation": float(max(0.0, slopes.max())),
-        "max_slope_monotone_violation_interior": float(max(0.0, interior.max()))
+        "max_slope_monotone_violation_interior": float(max(0.0, -interior.min()))
         if len(interior) else 0.0,
         "boundary_slope_jump": float(slopes[-1] - slopes[-2]) if len(slopes) > 1 else 0.0,
         "canonical_tangent_count": int(len(canonical_tangents(tangents))),

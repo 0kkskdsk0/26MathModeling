@@ -32,7 +32,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-from scipy.sparse import coo_matrix, hstack
+from scipy.sparse import coo_matrix, hstack, vstack
 
 if __package__:
     from .value_function import S_MAX, S_MIN
@@ -45,6 +45,44 @@ from taskComposite.model import (SLOTS, LinearProgram, ModelParams, VariableLayo
                                  unpack_decision, unpack_recourse, validate_scenarios)  # noqa: E402,F401
 
 TOL = 1e-6
+_TOL_PAIR = {"primal_feasibility_tolerance": 1e-10, "dual_feasibility_tolerance": 1e-10}
+FAR_SOLVER_LADDER = (
+    ("highs+presolve", _TOL_PAIR, "highs"),
+    ("highs-no-presolve", {**_TOL_PAIR, "presolve": False}, "highs"),
+    ("highs-ds-no-presolve", {**_TOL_PAIR, "presolve": False}, "highs-ds"),
+    ("highs-ipm", {"ipm_optimality_tolerance": 1e-10}, "highs-ipm"),
+)
+
+
+def solve_far(program: LinearProgram, tag: str, trace: list | None = None):
+    """远视决策层与远视执行层的求解入口：按固定顺序回退的多级求解。
+
+    终端价值约束把自由变量 $\\theta$（数万元量级）、斜率 $a_q$（约 $-0.5$）与大右端项
+    $-b_q$（约 $-5\\times10^4$）放进同一个模型后，数值条件明显变差：2025-03-25 在
+    HiGHS 默认 presolve 下返回 status 15（model_status Unknown、primal_status
+    Infeasible），而 2025-02-11 在关闭 presolve 后反而返回同样的状态——**两种设置各有
+    失败的个案**，模型本身在两处都可行。因此这里按事先固定的顺序逐级回退：
+
+    1. `highs` + presolve（与 `taskComposite.model.solve` 逐元素相同，绝大多数日走这一级）；
+    2. `highs` + `presolve=False`；
+    3. `highs-ds` + `presolve=False`；
+    4. `highs-ipm`。
+
+    实际走了哪一级逐日记录在 `dispatch_year_far.csv` 的 `solver_path` 列。
+    无论走哪一级，解都要通过 C1—C14 的残差与终端价值核验，因此求解路径的差异
+    不会改变模型的定义与结论。
+    """
+    from scipy.optimize import linprog
+    last = None
+    for name, options, method in FAR_SOLVER_LADDER:
+        last = linprog(program.c, A_ub=program.A_ub, b_ub=program.b_ub,
+                       A_eq=program.A_eq, b_eq=program.b_eq, bounds=program.bounds,
+                       method=method, options=options)
+        if last.success and last.status == 0 and np.isfinite(last.x).all():
+            if trace is not None:
+                trace.append(name)
+            return last
+    raise RuntimeError(f"{tag} 在四级求解路径上均未达到最优状态：{last.message}")
 
 
 @dataclass(frozen=True)
@@ -157,18 +195,27 @@ def build_decision_lp_far(params: ModelParams, load: np.ndarray, pv: np.ndarray,
     layout = FarVariableLayout(base.layout, scenarios)
 
     c = np.concatenate([base.c, np.asarray(weights, dtype=float)])
-    rows, cols, data = [], [], []
+    # 追加行：[0 | theta 块] 与 [S_{k,145} 块 | theta 块] 上下拼接，
+    # 使新增约束 -theta_k + a_q S_{k,145} <= -b_q 同时引用旧列与新列。
+    top = hstack([base.A_ub, coo_matrix((base.A_ub.shape[0], scenarios))],
+                 format="csr")
+    storage_rows, storage_cols, storage_data = [], [], []
+    theta_rows, theta_cols, theta_data = [], [], []
     for k in range(scenarios):
         for q in range(quality):
             row = k * quality + q
-            rows.append(row)
-            cols.append(k)
-            data.append(-1.0)
-            rows.append(row)
-            cols.append(base.layout.S(k, SLOTS))
-            data.append(float(coefficients[q, 0]))
-    theta_block = coo_matrix((data, (rows, cols)), shape=(scenarios * quality, scenarios))
-    A_ub = hstack([base.A_ub, theta_block], format="csr")
+            storage_rows.append(row)
+            storage_cols.append(base.layout.S(k, SLOTS))
+            storage_data.append(float(coefficients[q, 0]))
+            theta_rows.append(row)
+            theta_cols.append(k)
+            theta_data.append(-1.0)
+    storage_block = coo_matrix((storage_data, (storage_rows, storage_cols)),
+                               shape=(scenarios * quality, base.size))
+    theta_block = coo_matrix((theta_data, (theta_rows, theta_cols)),
+                             shape=(scenarios * quality, scenarios))
+    bottom = hstack([storage_block, theta_block], format="csr")
+    A_ub = vstack([top, bottom], format="csr")
     b_ub = np.concatenate([base.b_ub,
                            np.tile(-coefficients[:, 1], scenarios)])
     A_eq = hstack([base.A_eq,
@@ -202,6 +249,85 @@ class _SolutionView:
     def __init__(self, x: np.ndarray, fun: float):
         self.x = x
         self.fun = fun
+
+
+@dataclass(frozen=True)
+class FarRecourseLayout:
+    """在近视执行层布局之后追加一个 theta 变量：分块顺序 [C, D, S, E, W, theta]。"""
+
+    base: object
+    n_theta: int = 0
+
+    @property
+    def size(self) -> int:
+        return self.base.size + self.n_theta
+
+    @property
+    def offset_theta(self) -> int:
+        return self.base.size
+
+    def C(self, t: int) -> int:
+        return self.base.C(t)
+
+    def D(self, t: int) -> int:
+        return self.base.D(t)
+
+    def S(self, t: int) -> int:
+        return self.base.S(t)
+
+    def E(self, t: int) -> int:
+        return self.base.E(t)
+
+    def W(self, t: int) -> int:
+        return self.base.W(t)
+
+    def theta(self) -> int:
+        return self.offset_theta
+
+
+def build_recourse_lp_far(params: ModelParams, plan: np.ndarray, load: np.ndarray,
+                          pv: np.ndarray, s_start: float,
+                          tangents=None) -> LinearProgram:
+    """在**执行层**也计入终端价值项的附加口径（不用于主对照，见 comparison 报告第五节）。
+
+    主对照按要求让两个模型共用逐元素相同的执行层；本函数只用于诊断
+    "执行层的近视性是否掩盖了终端价值的作用"。它在补救问题的目标里追加
+    $\\theta$ 与同一组切线给出的下界，使实际执行路径也愿意为次日留电。
+    `tangents=None` 时退化为 `taskComposite` 的执行层。
+    """
+    from taskComposite.model import build_recourse_lp
+    base = build_recourse_lp(params, plan, load, pv, s_start)
+    coefficients = normalise_tangents(tangents)
+    if len(coefficients) == 0:
+        return base
+    quality = len(coefficients)
+    layout = FarRecourseLayout(base.layout, 1)
+    c = np.concatenate([base.c, [1.0]])
+    top = hstack([base.A_ub, coo_matrix((base.A_ub.shape[0], 1))], format="csr")
+    storage_col = base.layout.S(SLOTS)
+    storage_block = coo_matrix((coefficients[:, 0],
+                                (np.arange(quality), np.full(quality, storage_col))),
+                               shape=(quality, base.size))
+    theta_block = coo_matrix((-np.ones(quality), (np.arange(quality), np.zeros(quality, int))),
+                             shape=(quality, 1))
+    bottom = hstack([storage_block, theta_block], format="csr")
+    A_ub = vstack([top, bottom], format="csr")
+    b_ub = np.concatenate([base.b_ub, -coefficients[:, 1]])
+    A_eq = hstack([base.A_eq, coo_matrix((base.A_eq.shape[0], 1))], format="csr")
+    bounds = list(base.bounds) + [(None, None)]
+    return LinearProgram(c, A_eq, base.b_eq, A_ub, b_ub, bounds, layout, "recourse_far")
+
+
+def unpack_recourse_far(result, layout) -> dict:
+    """按布局拆解远视执行层的解向量。"""
+    base_layout = layout.base if isinstance(layout, FarRecourseLayout) else layout
+    view = _SolutionView(np.asarray(result.x, dtype=float)[:base_layout.size],
+                         float(result.fun))
+    solution = unpack_recourse(view, base_layout)
+    solution["theta"] = (float(result.x[layout.offset_theta])
+                         if isinstance(layout, FarRecourseLayout) and layout.n_theta
+                         else 0.0)
+    return solution
 
 
 def terminal_value_residual(solution: dict, tangents: np.ndarray,

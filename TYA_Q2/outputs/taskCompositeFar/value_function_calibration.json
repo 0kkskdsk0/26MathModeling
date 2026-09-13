@@ -1,0 +1,87 @@
+{
+  "days": [
+    "2025-02-15",
+    "2025-03-16",
+    "2025-04-16",
+    "2025-05-16",
+    "2025-06-16",
+    "2025-07-16",
+    "2025-08-16",
+    "2025-09-16",
+    "2025-10-16",
+    "2025-11-16",
+    "2025-12-16",
+    "2025-12-31"
+  ],
+  "per_round": {
+    "0": {
+      "days": 12,
+      "max_delta": 1133.2878477794584,
+      "median_delta": 933.6873922611558,
+      "max_new_effective": -1,
+      "max_effective_count": 5,
+      "max_envelope_increase": -1.0,
+      "median_envelope_increase": -1.0,
+      "max_monotone_violation_interior": 0.4719375251142316,
+      "max_slope_positive_violation": 5.84592809434455e-07
+    },
+    "1": {
+      "days": 12,
+      "max_delta": 567.985361067862,
+      "median_delta": 547.4191053040413,
+      "max_new_effective": 4,
+      "max_effective_count": 9,
+      "max_envelope_increase": 100.64767827300238,
+      "median_envelope_increase": 56.434265637733915,
+      "max_monotone_violation_interior": 0.41255615710257676,
+      "max_slope_positive_violation": 5.84592809434455e-07
+    },
+    "2": {
+      "days": 12,
+      "max_delta": 284.6006468010164,
+      "median_delta": 282.56973736437794,
+      "max_new_effective": 8,
+      "max_effective_count": 17,
+      "max_envelope_increase": 37.90526625981147,
+      "median_envelope_increase": 18.056670154099265,
+      "max_monotone_violation_interior": 0.41255580328995584,
+      "max_slope_positive_violation": 5.84592809434455e-07
+    },
+    "3": {
+      "days": 12,
+      "max_delta": 142.30032946663414,
+      "median_delta": 141.50407790752797,
+      "max_new_effective": 16,
+      "max_effective_count": 33,
+      "max_envelope_increase": 21.97401473798527,
+      "median_envelope_increase": 10.445622296807414,
+      "max_monotone_violation_interior": 0.3395815118913182,
+      "max_slope_positive_violation": 5.84592809434455e-07
+    },
+    "4": {
+      "days": 12,
+      "max_delta": 71.15016534234746,
+      "median_delta": 70.75391376782136,
+      "max_new_effective": 32,
+      "max_effective_count": 65,
+      "max_envelope_increase": 11.817408142225759,
+      "median_envelope_increase": 2.568541586966603,
+      "max_monotone_violation_interior": 0.31579016001707116,
+      "max_slope_positive_violation": 5.84592809434455e-07
+    },
+    "5": {
+      "days": 12,
+      "max_delta": 35.57508280822367,
+      "median_delta": 35.38142566645183,
+      "max_new_effective": 64,
+      "max_effective_count": 129,
+      "max_envelope_increase": 9.247606072050985,
+      "median_envelope_increase": 1.011447668493929,
+      "max_monotone_violation_interior": 0.2488600013079831,
+      "max_slope_positive_violation": 5.84592809434455e-07
+    }
+  },
+  "r_max": 5,
+  "n0": 5,
+  "wall_seconds": 429.6
+}
