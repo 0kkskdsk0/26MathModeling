@@ -1,0 +1,30 @@
+﻿Զ��ģ�ͣ�334 ������գ���� 0.3713��1.3952 Ԫ/kWh����=150 Ԫ����=15 Ԫ
+��ǰ�̶����������̣�G:\26MathModeling\TYA_Q2\outputs\taskCompositeFar\frozen_rule_far.json
+  2025-01-01 ��=  0 �ƻ�=       0.0 ���=  87715.2 ��ĩSOC=  1200.00 ����=0
+  2025-02-01 ��= 24 �ƻ�=   47842.9 ���=      0.0 ��ĩSOC=  1200.00 ����=63
+  2025-03-01 ��= 28 �ƻ�=   42394.7 ���=     21.6 ��ĩSOC=  1200.00 ����=64
+  2025-04-01 ��= 31 �ƻ�=   65508.4 ���=      0.0 ��ĩSOC=  1200.00 ����=62
+  2025-05-01 ��= 30 �ƻ�=   60501.2 ���=      0.0 ��ĩSOC=  1200.00 ����=34
+  2025-06-01 ��= 31 �ƻ�=   62017.7 ���=   9646.9 ��ĩSOC=  1200.00 ����=20
+  2025-07-01 ��= 30 �ƻ�=   77700.5 ���=   2400.2 ��ĩSOC=  1200.00 ����=32
+  2025-08-01 ��= 31 �ƻ�=   50283.1 ���=      0.0 ��ĩSOC=  1200.00 ����=65
+  2025-09-01 ��= 31 �ƻ�=   75571.3 ���=      0.0 ��ĩSOC=  1200.00 ����=23
+  2025-10-01 ��= 30 �ƻ�=   69825.3 ���=      0.0 ��ĩSOC=  1200.00 ����=14
+  2025-11-01 ��= 31 �ƻ�=   40962.9 ���=      0.0 ��ĩSOC=  1200.00 ����=65
+  2025-12-01 ��= 54 �ƻ�=   90756.1 ���=      0.0 ��ĩSOC=  1200.00 ����=41
+  2025-12-31 ��= 84 �ƻ�=   91874.1 ���=      0.0 ��ĩSOC=  1200.00 ����=34
+python : Traceback (most recent call last):
+At line:1 char:151
++ ... thModeling; python -B TYA_Q2\solving\taskCompositeFar\solve_year_far. ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "G:\26MathModeling\TYA_Q2\solving\taskCompositeFar\solve_year_far.py", line 1328, in <module>
+    main()
+    ~~~~^^
+  File "G:\26MathModeling\TYA_Q2\solving\taskCompositeFar\solve_year_far.py", line 1308, in main
+    execution_probe = execution_lookahead_probe(ctx, tangent_table, result)
+  File "G:\26MathModeling\TYA_Q2\solving\taskCompositeFar\solve_year_far.py", line 443, in execution_lookahead_probe
+    from .model_far import build_recourse_lp_far, unpack_recourse_far
+ImportError: attempted relative import with no known parent package

@@ -68,6 +68,6 @@ $$
 - 第二阶段变量（均带 $\omega$）：$C_{d,t}^{\omega},D_{d,t}^{\omega}\in[0,\bar e]$，$S_{d,t}^{\omega}\in[S^{\min},S^{\max}]$（$t\in\mathcal{T}^+$），$E_{d,t}^{\omega}\ge0$（紧急购电，单价 $5P_t$），$W_{d,t}^{\omega}\ge0$（弃置电量，弃光与已购未利用合并）；
 - 实际执行路径：$C_{d,t},D_{d,t},S_{d,t},E_{d,t},W_{d,t}$（不带 $\omega$）；
 - 跨日衔接：$S_{d+1,1}=S_{d,145}$，$S_{2025\text{-}01\text{-}01,1}=6000$；问题二不设 $S_{d,145}=S_{d,1}$ 循环约束；
-- 终端价值（暂不进目标函数，用于形式化"是否考虑跨日储能"的待验证假设）：$V_{d+1}(s)$ 为次日以储能 $s$ 开局的最小期望费用；$\theta_d^{\omega}\ge a_{d,q}S_{d,145}^{\omega}+b_{d,q}$（$q=0,\ldots,Q-1$，$a_{d,q}\le0$）为其分段线性化；
+- 终端价值：$V_{d+1}(s)$ 为次日以储能 $s$ 开局的最小期望费用；$\theta_d^{\omega}\ge a_{d,q}S_{d,145}^{\omega}+b_{d,q}$（$q=0,\ldots,Q-1$，$a_{d,q}\le0$ 且随 $q$ 单调不减）为其分段线性下界支撑。**近视模型取 $\theta\equiv0$；远视模型把 $\sum_{\omega\in\Omega_d}\pi_{d,\omega}\theta_d^{\omega}$ 计入目标函数**，两个模型在其余部分逐元素相同，详见 `outputs/taskCompositeFar/frozen_rule_far.json` 与 `Q2Project.md` 第 4.4 节；
 - 全年结算：$C_{\mathrm{official}}=\sum_{d\in\mathcal{D}_{\mathrm{out}}}\sum_{t\in\mathcal{T}}(P_tG_{d,t}+5P_tE_{d,t})$，只含真实发生的计划费与紧急费，$\theta$ 不计入。
 

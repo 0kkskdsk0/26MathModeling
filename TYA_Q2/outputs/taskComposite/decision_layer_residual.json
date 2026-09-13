@@ -1,0 +1,2048 @@
+[
+  {
+    "date": "2025-01-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-01-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 28
+    }
+  },
+  {
+    "date": "2025-01-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 21
+    }
+  },
+  {
+    "date": "2025-01-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 38
+    }
+  },
+  {
+    "date": "2025-01-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 188
+    }
+  },
+  {
+    "date": "2025-01-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 28
+    }
+  },
+  {
+    "date": "2025-01-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 30
+    }
+  },
+  {
+    "date": "2025-01-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 35
+    }
+  },
+  {
+    "date": "2025-01-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 76
+    }
+  },
+  {
+    "date": "2025-01-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 77
+    }
+  },
+  {
+    "date": "2025-01-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 195
+    }
+  },
+  {
+    "date": "2025-01-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 208
+    }
+  },
+  {
+    "date": "2025-01-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 100
+    }
+  },
+  {
+    "date": "2025-01-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 92
+    }
+  },
+  {
+    "date": "2025-01-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 138
+    }
+  },
+  {
+    "date": "2025-01-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 112
+    }
+  },
+  {
+    "date": "2025-01-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 36
+    }
+  },
+  {
+    "date": "2025-01-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 219
+    }
+  },
+  {
+    "date": "2025-02-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 73
+    }
+  },
+  {
+    "date": "2025-02-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 159
+    }
+  },
+  {
+    "date": "2025-02-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 377
+    }
+  },
+  {
+    "date": "2025-02-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 176
+    }
+  },
+  {
+    "date": "2025-02-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 395
+    }
+  },
+  {
+    "date": "2025-02-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 303
+    }
+  },
+  {
+    "date": "2025-02-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 623
+    }
+  },
+  {
+    "date": "2025-02-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 672
+    }
+  },
+  {
+    "date": "2025-02-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 229
+    }
+  },
+  {
+    "date": "2025-02-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 276
+    }
+  },
+  {
+    "date": "2025-02-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 282
+    }
+  },
+  {
+    "date": "2025-02-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 330
+    }
+  },
+  {
+    "date": "2025-02-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 564
+    }
+  },
+  {
+    "date": "2025-02-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 99
+    }
+  },
+  {
+    "date": "2025-02-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 652
+    }
+  },
+  {
+    "date": "2025-02-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 482
+    }
+  },
+  {
+    "date": "2025-02-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 464
+    }
+  },
+  {
+    "date": "2025-02-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 393
+    }
+  },
+  {
+    "date": "2025-02-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 96
+    }
+  },
+  {
+    "date": "2025-02-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 329
+    }
+  },
+  {
+    "date": "2025-02-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 644
+    }
+  },
+  {
+    "date": "2025-02-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 316
+    }
+  },
+  {
+    "date": "2025-02-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 328
+    }
+  },
+  {
+    "date": "2025-02-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 352
+    }
+  },
+  {
+    "date": "2025-02-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 385
+    }
+  },
+  {
+    "date": "2025-02-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 79
+    }
+  },
+  {
+    "date": "2025-02-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 105
+    }
+  },
+  {
+    "date": "2025-02-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 809
+    }
+  },
+  {
+    "date": "2025-03-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 442
+    }
+  },
+  {
+    "date": "2025-03-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 133
+    }
+  },
+  {
+    "date": "2025-03-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 42
+    }
+  },
+  {
+    "date": "2025-03-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 51
+    }
+  },
+  {
+    "date": "2025-03-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 51
+    }
+  },
+  {
+    "date": "2025-03-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 176
+    }
+  },
+  {
+    "date": "2025-03-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 779
+    }
+  },
+  {
+    "date": "2025-03-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 839
+    }
+  },
+  {
+    "date": "2025-03-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 216
+    }
+  },
+  {
+    "date": "2025-03-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 257
+    }
+  },
+  {
+    "date": "2025-03-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 262
+    }
+  },
+  {
+    "date": "2025-03-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 263
+    }
+  },
+  {
+    "date": "2025-03-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 290
+    }
+  },
+  {
+    "date": "2025-03-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1098
+    }
+  },
+  {
+    "date": "2025-03-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1017
+    }
+  },
+  {
+    "date": "2025-03-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 307
+    }
+  },
+  {
+    "date": "2025-03-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 295
+    }
+  },
+  {
+    "date": "2025-03-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 337
+    }
+  },
+  {
+    "date": "2025-03-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 63
+    }
+  },
+  {
+    "date": "2025-03-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 402
+    }
+  },
+  {
+    "date": "2025-03-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 683
+    }
+  },
+  {
+    "date": "2025-03-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 116
+    }
+  },
+  {
+    "date": "2025-03-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 201
+    }
+  },
+  {
+    "date": "2025-03-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 513
+    }
+  },
+  {
+    "date": "2025-03-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 454
+    }
+  },
+  {
+    "date": "2025-03-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 475
+    }
+  },
+  {
+    "date": "2025-03-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 55
+    }
+  },
+  {
+    "date": "2025-03-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 605
+    }
+  },
+  {
+    "date": "2025-03-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 749
+    }
+  },
+  {
+    "date": "2025-03-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 236
+    }
+  },
+  {
+    "date": "2025-03-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 130
+    }
+  },
+  {
+    "date": "2025-04-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 121
+    }
+  },
+  {
+    "date": "2025-04-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 103
+    }
+  },
+  {
+    "date": "2025-04-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 72
+    }
+  },
+  {
+    "date": "2025-04-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 521
+    }
+  },
+  {
+    "date": "2025-04-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 493
+    }
+  },
+  {
+    "date": "2025-04-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-04-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 17
+    }
+  },
+  {
+    "date": "2025-04-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 69
+    }
+  },
+  {
+    "date": "2025-04-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 96
+    }
+  },
+  {
+    "date": "2025-04-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 102
+    }
+  },
+  {
+    "date": "2025-04-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 521
+    }
+  },
+  {
+    "date": "2025-04-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 553
+    }
+  },
+  {
+    "date": "2025-04-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 59
+    }
+  },
+  {
+    "date": "2025-04-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 84
+    }
+  },
+  {
+    "date": "2025-04-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 54
+    }
+  },
+  {
+    "date": "2025-04-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-04-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 75
+    }
+  },
+  {
+    "date": "2025-04-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 572
+    }
+  },
+  {
+    "date": "2025-04-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 504
+    }
+  },
+  {
+    "date": "2025-04-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 120
+    }
+  },
+  {
+    "date": "2025-04-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 199
+    }
+  },
+  {
+    "date": "2025-04-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 188
+    }
+  },
+  {
+    "date": "2025-04-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 178
+    }
+  },
+  {
+    "date": "2025-04-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 130
+    }
+  },
+  {
+    "date": "2025-04-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 649
+    }
+  },
+  {
+    "date": "2025-04-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 712
+    }
+  },
+  {
+    "date": "2025-04-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 296
+    }
+  },
+  {
+    "date": "2025-04-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 349
+    }
+  },
+  {
+    "date": "2025-04-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 88
+    }
+  },
+  {
+    "date": "2025-04-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 130
+    }
+  },
+  {
+    "date": "2025-05-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 103
+    }
+  },
+  {
+    "date": "2025-05-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 236
+    }
+  },
+  {
+    "date": "2025-05-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 515
+    }
+  },
+  {
+    "date": "2025-05-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 63
+    }
+  },
+  {
+    "date": "2025-05-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 33
+    }
+  },
+  {
+    "date": "2025-05-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 88
+    }
+  },
+  {
+    "date": "2025-05-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 86
+    }
+  },
+  {
+    "date": "2025-05-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 64
+    }
+  },
+  {
+    "date": "2025-05-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 169
+    }
+  },
+  {
+    "date": "2025-05-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 628
+    }
+  },
+  {
+    "date": "2025-05-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 49
+    }
+  },
+  {
+    "date": "2025-05-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 46
+    }
+  },
+  {
+    "date": "2025-05-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 38
+    }
+  },
+  {
+    "date": "2025-05-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 80
+    }
+  },
+  {
+    "date": "2025-05-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 96
+    }
+  },
+  {
+    "date": "2025-05-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 482
+    }
+  },
+  {
+    "date": "2025-05-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 617
+    }
+  },
+  {
+    "date": "2025-05-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 142
+    }
+  },
+  {
+    "date": "2025-05-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 147
+    }
+  },
+  {
+    "date": "2025-05-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 120
+    }
+  },
+  {
+    "date": "2025-05-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 156
+    }
+  },
+  {
+    "date": "2025-05-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 112
+    }
+  },
+  {
+    "date": "2025-05-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 868
+    }
+  },
+  {
+    "date": "2025-05-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 785
+    }
+  },
+  {
+    "date": "2025-05-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 55
+    }
+  },
+  {
+    "date": "2025-05-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 60
+    }
+  },
+  {
+    "date": "2025-05-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 66
+    }
+  },
+  {
+    "date": "2025-05-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  },
+  {
+    "date": "2025-05-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 98
+    }
+  },
+  {
+    "date": "2025-05-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1068
+    }
+  },
+  {
+    "date": "2025-05-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1113
+    }
+  },
+  {
+    "date": "2025-06-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 4
+    }
+  },
+  {
+    "date": "2025-06-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 53
+    }
+  },
+  {
+    "date": "2025-06-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 22
+    }
+  },
+  {
+    "date": "2025-06-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 33
+    }
+  },
+  {
+    "date": "2025-06-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 5
+    }
+  },
+  {
+    "date": "2025-06-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 21
+    }
+  },
+  {
+    "date": "2025-06-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 21
+    }
+  },
+  {
+    "date": "2025-06-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 36
+    }
+  },
+  {
+    "date": "2025-06-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  },
+  {
+    "date": "2025-06-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  },
+  {
+    "date": "2025-06-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 3
+    }
+  },
+  {
+    "date": "2025-06-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 240
+    }
+  },
+  {
+    "date": "2025-06-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 372
+    }
+  },
+  {
+    "date": "2025-06-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 4
+    }
+  },
+  {
+    "date": "2025-06-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 3
+    }
+  },
+  {
+    "date": "2025-06-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-06-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 9
+    }
+  },
+  {
+    "date": "2025-06-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 10
+    }
+  },
+  {
+    "date": "2025-06-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 110
+    }
+  },
+  {
+    "date": "2025-06-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 468
+    }
+  },
+  {
+    "date": "2025-06-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 10
+    }
+  },
+  {
+    "date": "2025-06-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 10
+    }
+  },
+  {
+    "date": "2025-06-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 8
+    }
+  },
+  {
+    "date": "2025-06-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 8
+    }
+  },
+  {
+    "date": "2025-06-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 16
+    }
+  },
+  {
+    "date": "2025-06-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 820
+    }
+  },
+  {
+    "date": "2025-06-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 820
+    }
+  },
+  {
+    "date": "2025-06-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 14
+    }
+  },
+  {
+    "date": "2025-06-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 18
+    }
+  },
+  {
+    "date": "2025-07-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 17
+    }
+  },
+  {
+    "date": "2025-07-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 7
+    }
+  },
+  {
+    "date": "2025-07-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 4
+    }
+  },
+  {
+    "date": "2025-07-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 400
+    }
+  },
+  {
+    "date": "2025-07-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 836
+    }
+  },
+  {
+    "date": "2025-07-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-07-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-07-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-07-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 380
+    }
+  },
+  {
+    "date": "2025-07-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 93
+    }
+  },
+  {
+    "date": "2025-07-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-07-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 3
+    }
+  },
+  {
+    "date": "2025-07-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 7
+    }
+  },
+  {
+    "date": "2025-07-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 11
+    }
+  },
+  {
+    "date": "2025-07-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 143
+    }
+  },
+  {
+    "date": "2025-07-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 278
+    }
+  },
+  {
+    "date": "2025-07-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-07-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 4
+    }
+  },
+  {
+    "date": "2025-07-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 11
+    }
+  },
+  {
+    "date": "2025-07-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 12
+    }
+  },
+  {
+    "date": "2025-07-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 14
+    }
+  },
+  {
+    "date": "2025-07-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 758
+    }
+  },
+  {
+    "date": "2025-07-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1117
+    }
+  },
+  {
+    "date": "2025-07-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 14
+    }
+  },
+  {
+    "date": "2025-07-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 17
+    }
+  },
+  {
+    "date": "2025-07-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 23
+    }
+  },
+  {
+    "date": "2025-07-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  },
+  {
+    "date": "2025-07-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 42
+    }
+  },
+  {
+    "date": "2025-08-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 437
+    }
+  },
+  {
+    "date": "2025-08-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 506
+    }
+  },
+  {
+    "date": "2025-08-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 32
+    }
+  },
+  {
+    "date": "2025-08-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 105
+    }
+  },
+  {
+    "date": "2025-08-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 82
+    }
+  },
+  {
+    "date": "2025-08-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 319
+    }
+  },
+  {
+    "date": "2025-08-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 278
+    }
+  },
+  {
+    "date": "2025-08-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 609
+    }
+  },
+  {
+    "date": "2025-08-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 378
+    }
+  },
+  {
+    "date": "2025-08-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 357
+    }
+  },
+  {
+    "date": "2025-08-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 317
+    }
+  },
+  {
+    "date": "2025-08-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 279
+    }
+  },
+  {
+    "date": "2025-08-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 270
+    }
+  },
+  {
+    "date": "2025-08-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 811
+    }
+  },
+  {
+    "date": "2025-08-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 924
+    }
+  },
+  {
+    "date": "2025-08-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 132
+    }
+  },
+  {
+    "date": "2025-08-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 97
+    }
+  },
+  {
+    "date": "2025-08-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 164
+    }
+  },
+  {
+    "date": "2025-08-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 172
+    }
+  },
+  {
+    "date": "2025-08-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 71
+    }
+  },
+  {
+    "date": "2025-08-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1056
+    }
+  },
+  {
+    "date": "2025-08-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1053
+    }
+  },
+  {
+    "date": "2025-08-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 50
+    }
+  },
+  {
+    "date": "2025-08-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 167
+    }
+  },
+  {
+    "date": "2025-08-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 44
+    }
+  },
+  {
+    "date": "2025-08-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 87
+    }
+  },
+  {
+    "date": "2025-08-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 65
+    }
+  },
+  {
+    "date": "2025-08-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1210
+    }
+  },
+  {
+    "date": "2025-08-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1290
+    }
+  },
+  {
+    "date": "2025-08-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 77
+    }
+  },
+  {
+    "date": "2025-09-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 16
+    }
+  },
+  {
+    "date": "2025-09-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 12
+    }
+  },
+  {
+    "date": "2025-09-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 20
+    }
+  },
+  {
+    "date": "2025-09-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 33
+    }
+  },
+  {
+    "date": "2025-09-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 496
+    }
+  },
+  {
+    "date": "2025-09-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 29
+    }
+  },
+  {
+    "date": "2025-09-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 70
+    }
+  },
+  {
+    "date": "2025-09-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 343
+    }
+  },
+  {
+    "date": "2025-09-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 221
+    }
+  },
+  {
+    "date": "2025-09-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 175
+    }
+  },
+  {
+    "date": "2025-09-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 50
+    }
+  },
+  {
+    "date": "2025-09-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 991
+    }
+  },
+  {
+    "date": "2025-09-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 218
+    }
+  },
+  {
+    "date": "2025-09-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 121
+    }
+  },
+  {
+    "date": "2025-09-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 84
+    }
+  },
+  {
+    "date": "2025-09-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 75
+    }
+  },
+  {
+    "date": "2025-09-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 54
+    }
+  },
+  {
+    "date": "2025-09-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 69
+    }
+  },
+  {
+    "date": "2025-09-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 180
+    }
+  },
+  {
+    "date": "2025-09-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 783
+    }
+  },
+  {
+    "date": "2025-09-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 63
+    }
+  },
+  {
+    "date": "2025-09-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 69
+    }
+  },
+  {
+    "date": "2025-09-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 81
+    }
+  },
+  {
+    "date": "2025-09-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 60
+    }
+  },
+  {
+    "date": "2025-09-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  },
+  {
+    "date": "2025-09-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1161
+    }
+  },
+  {
+    "date": "2025-09-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 522
+    }
+  },
+  {
+    "date": "2025-09-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 23
+    }
+  },
+  {
+    "date": "2025-09-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 12
+    }
+  },
+  {
+    "date": "2025-09-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 27
+    }
+  },
+  {
+    "date": "2025-10-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 4
+    }
+  },
+  {
+    "date": "2025-10-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 19
+    }
+  },
+  {
+    "date": "2025-10-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 433
+    }
+  },
+  {
+    "date": "2025-10-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 390
+    }
+  },
+  {
+    "date": "2025-10-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 30
+    }
+  },
+  {
+    "date": "2025-10-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 39
+    }
+  },
+  {
+    "date": "2025-10-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 48
+    }
+  },
+  {
+    "date": "2025-10-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 21
+    }
+  },
+  {
+    "date": "2025-10-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 29
+    }
+  },
+  {
+    "date": "2025-10-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 645
+    }
+  },
+  {
+    "date": "2025-10-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 609
+    }
+  },
+  {
+    "date": "2025-10-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 25
+    }
+  },
+  {
+    "date": "2025-10-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 19
+    }
+  },
+  {
+    "date": "2025-10-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 17
+    }
+  },
+  {
+    "date": "2025-10-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 18
+    }
+  },
+  {
+    "date": "2025-10-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 9
+    }
+  },
+  {
+    "date": "2025-10-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 721
+    }
+  },
+  {
+    "date": "2025-10-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 654
+    }
+  },
+  {
+    "date": "2025-10-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 3
+    }
+  },
+  {
+    "date": "2025-10-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 19
+    }
+  },
+  {
+    "date": "2025-10-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-10-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 546
+    }
+  },
+  {
+    "date": "2025-10-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 780
+    }
+  },
+  {
+    "date": "2025-10-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-10-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 10
+    }
+  },
+  {
+    "date": "2025-10-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 8
+    }
+  },
+  {
+    "date": "2025-10-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 924
+    }
+  },
+  {
+    "date": "2025-11-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 484
+    }
+  },
+  {
+    "date": "2025-11-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-11-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-11-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-11-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-11-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 459
+    }
+  },
+  {
+    "date": "2025-11-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 594
+    }
+  },
+  {
+    "date": "2025-11-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1
+    }
+  },
+  {
+    "date": "2025-11-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-11-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 8
+    }
+  },
+  {
+    "date": "2025-11-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 9
+    }
+  },
+  {
+    "date": "2025-11-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 9
+    }
+  },
+  {
+    "date": "2025-11-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 736
+    }
+  },
+  {
+    "date": "2025-11-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 768
+    }
+  },
+  {
+    "date": "2025-11-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 5
+    }
+  },
+  {
+    "date": "2025-11-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-11-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 11
+    }
+  },
+  {
+    "date": "2025-11-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 9
+    }
+  },
+  {
+    "date": "2025-11-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 666
+    }
+  },
+  {
+    "date": "2025-11-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 629
+    }
+  },
+  {
+    "date": "2025-11-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 11
+    }
+  },
+  {
+    "date": "2025-11-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 10
+    }
+  },
+  {
+    "date": "2025-11-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 10
+    }
+  },
+  {
+    "date": "2025-11-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 8
+    }
+  },
+  {
+    "date": "2025-11-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-11-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 882
+    }
+  },
+  {
+    "date": "2025-11-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 924
+    }
+  },
+  {
+    "date": "2025-11-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 2
+    }
+  },
+  {
+    "date": "2025-12-01",
+    "fields": {
+      "scenario_emergency_and_charge_count": 145
+    }
+  },
+  {
+    "date": "2025-12-02",
+    "fields": {
+      "scenario_emergency_and_charge_count": 117
+    }
+  },
+  {
+    "date": "2025-12-03",
+    "fields": {
+      "scenario_emergency_and_charge_count": 104
+    }
+  },
+  {
+    "date": "2025-12-04",
+    "fields": {
+      "scenario_emergency_and_charge_count": 104
+    }
+  },
+  {
+    "date": "2025-12-05",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1219
+    }
+  },
+  {
+    "date": "2025-12-06",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1260
+    }
+  },
+  {
+    "date": "2025-12-07",
+    "fields": {
+      "scenario_emergency_and_charge_count": 42
+    }
+  },
+  {
+    "date": "2025-12-08",
+    "fields": {
+      "scenario_emergency_and_charge_count": 29
+    }
+  },
+  {
+    "date": "2025-12-09",
+    "fields": {
+      "scenario_emergency_and_charge_count": 29
+    }
+  },
+  {
+    "date": "2025-12-10",
+    "fields": {
+      "scenario_emergency_and_charge_count": 30
+    }
+  },
+  {
+    "date": "2025-12-11",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-12",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1081
+    }
+  },
+  {
+    "date": "2025-12-13",
+    "fields": {
+      "scenario_emergency_and_charge_count": 987
+    }
+  },
+  {
+    "date": "2025-12-14",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-15",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-16",
+    "fields": {
+      "scenario_emergency_and_charge_count": 28
+    }
+  },
+  {
+    "date": "2025-12-17",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-18",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-19",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1196
+    }
+  },
+  {
+    "date": "2025-12-20",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1300
+    }
+  },
+  {
+    "date": "2025-12-21",
+    "fields": {
+      "scenario_emergency_and_charge_count": 32
+    }
+  },
+  {
+    "date": "2025-12-22",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-23",
+    "fields": {
+      "scenario_emergency_and_charge_count": 32
+    }
+  },
+  {
+    "date": "2025-12-24",
+    "fields": {
+      "scenario_emergency_and_charge_count": 33
+    }
+  },
+  {
+    "date": "2025-12-25",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  },
+  {
+    "date": "2025-12-26",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1425
+    }
+  },
+  {
+    "date": "2025-12-27",
+    "fields": {
+      "scenario_emergency_and_charge_count": 1539
+    }
+  },
+  {
+    "date": "2025-12-28",
+    "fields": {
+      "scenario_emergency_and_charge_count": 31
+    }
+  },
+  {
+    "date": "2025-12-29",
+    "fields": {
+      "scenario_emergency_and_charge_count": 33
+    }
+  },
+  {
+    "date": "2025-12-30",
+    "fields": {
+      "scenario_emergency_and_charge_count": 32
+    }
+  },
+  {
+    "date": "2025-12-31",
+    "fields": {
+      "scenario_emergency_and_charge_count": 34
+    }
+  }
+]

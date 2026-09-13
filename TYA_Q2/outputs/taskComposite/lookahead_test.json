@@ -1,0 +1,12 @@
+{
+  "date": "2025-06-21",
+  "mode": "kernel",
+  "altered_mode": "kernel",
+  "pool_identical": true,
+  "weights_identical": true,
+  "plan_identical": true,
+  "max_absolute_plan_change_kwh": 0.0,
+  "target_observations_actually_changed": true,
+  "prefix_features_identical": true,
+  "passed": true
+}

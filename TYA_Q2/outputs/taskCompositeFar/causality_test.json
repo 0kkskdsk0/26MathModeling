@@ -1,0 +1,14 @@
+{
+  "tangents_identical": true,
+  "plan_identical": true,
+  "pool_identical": true,
+  "weights_identical": true,
+  "target_observations_changed": true,
+  "prefix_features_identical": true,
+  "max_abs_plan_change_kwh": 0.0,
+  "passed": true,
+  "date": "2025-06-21",
+  "reference_tangent_count": 61,
+  "perturbed_tangent_count": 61,
+  "perturbed_converged_round": 4
+}
